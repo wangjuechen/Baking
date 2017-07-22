@@ -1,0 +1,49 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.example.android.baking.MasterListFragment">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cv_receipt_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="@dimen/mainActivity_Card_radious"
+        android:elevation="@dimen/mainActivity_Card_elevation">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_title_receipt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/Title_CardView_topMargin"
+                android:layout_marginLeft="@dimen/Title_CardView_leftMargin"
+                android:layout_marginRight="@dimen/Title_CardView_rightMargin"
+                android:textSize="@dimen/Title_CardView_fontSize"
+                tools:text="Receipt"/>
+
+            <TextView
+                android:id="@+id/tv_content_receipt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/Content_CardView_topMargin"
+                android:layout_marginLeft="@dimen/Content_CardView_leftMargin"
+                android:layout_marginBottom="@dimen/Content_CardView_bottomMargin"
+                android:layout_marginRight="@dimen/Content_CardView_rightMargin"
+                android:textSize="@dimen/Content_CardView_fontSize"
+                android:layout_below="@id/tv_title_receipt"
+                tools:text="Content" />
+
+        </RelativeLayout>
+
+
+
+    </android.support.v7.widget.CardView>
+
+
+
+</FrameLayout>
