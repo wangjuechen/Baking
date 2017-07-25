@@ -38,10 +38,6 @@ import butterknife.BindView;
  * create an instance of this fragment.
  */
 public class MasterListFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
     private String JSON_RECEIPT_URL = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
 
@@ -53,10 +49,6 @@ public class MasterListFragment extends Fragment {
 
     private RecyclerView mRecycleView;
 
-    private ProgressBar mProgressBar;
-
-    private Toast mToast;
-
     private ReceiptListAdapter mAdapter;
 
     private List<ReceiptItem> mReceiptItems;
@@ -64,30 +56,15 @@ public class MasterListFragment extends Fragment {
     @BindView(R.id.tv_title_receipt)
     TextView tv_receiptTitle;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     private OnFragmentInteractionListener mListener;
 
     public MasterListFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MasterListFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static MasterListFragment newInstance(String param1, String param2) {
         MasterListFragment fragment = new MasterListFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -95,10 +72,6 @@ public class MasterListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -106,24 +79,15 @@ public class MasterListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.receipt_list, container, false);
 
-        mProgressBar = (ProgressBar) rootView.findViewById(R.id.pb_loading_indicator);
-
         mRecycleView = (RecyclerView) rootView.findViewById(R.id.rv_receipt_list);
-
         mRecycleView.setHasFixedSize(true);
-
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-
         mRecycleView.setLayoutManager(mLayoutManager);
 
         mRequestQueue = Volley.newRequestQueue(getActivity());
-
         GsonBuilder gsonbuilder = new GsonBuilder();
-
         gsonbuilder.setDateFormat("M/d/yy hh:mm a");
-
         gson = gsonbuilder.create();
-
         fetchPosts();
 
         return rootView;
@@ -145,8 +109,6 @@ public class MasterListFragment extends Fragment {
             mAdapter = new ReceiptListAdapter(mReceiptItems);
 
             mRecycleView.setAdapter(mAdapter);
-
-            Log.i("MasterListFragment", mReceiptItems.size() + " Loaded");
         }
     };
 
@@ -164,16 +126,6 @@ public class MasterListFragment extends Fragment {
         }
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
 
         void onFragmentInteraction(Uri uri);

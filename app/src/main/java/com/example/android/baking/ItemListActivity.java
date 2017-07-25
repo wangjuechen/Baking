@@ -1,14 +1,11 @@
 package com.example.android.baking;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-
-import java.net.URL;
 
 /**
  * An activity representing a list of Items. This activity
@@ -19,11 +16,6 @@ import java.net.URL;
  * item details side-by-side using two vertical panes.
  */
 public class ItemListActivity extends AppCompatActivity {
-
-    /**
-     * Whether or not the activity is in two-pane mode, i.e. running on a tablet
-     * device.
-     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,5 +42,4 @@ public class ItemListActivity extends AppCompatActivity {
                 .commit();
 
     }
-
 }
