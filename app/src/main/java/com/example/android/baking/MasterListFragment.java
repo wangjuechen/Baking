@@ -1,24 +1,38 @@
 package com.example.android.baking;
 
-import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.android.baking.dummy.DummyContent;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.android.baking.Utilities.NetworkUtils;
+import com.example.android.baking.dummy.ReceiptItem;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.FileReader;
+import java.io.Reader;
+import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 
 /**
@@ -35,16 +49,26 @@ public class MasterListFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    private String JSON_RECEIPT_URL = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
+
+    private RequestQueue mRequestQueue;
+
+    private Gson gson;
+
     private final LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
 
+    private RecyclerView mRecycleView;
 
-    private  RecyclerView mRecycleView;
+    private ProgressBar mProgressBar;
+
+    private Toast mToast;
+
+    private ReceiptListAdapter mAdapter;
+
+    private List<ReceiptItem> mReceiptItems;
 
     @BindView(R.id.tv_title_receipt)
     TextView tv_receiptTitle;
-
-    @BindView(R.id.tv_content_receipt)
-    TextView tv_receiptContent;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -88,17 +112,56 @@ public class MasterListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.receipt_list, container, false);
 
-        DummyContent.Initialize();
+        mRequestQueue = Volley.newRequestQueue(getActivity());
+
+        GsonBuilder gsonbuilder = new GsonBuilder();
+
+        gsonbuilder.setDateFormat("M/d/yy hh:mm a");
+
+        gson = gsonbuilder.create();
+
+        fetchPosts();
+
+        mProgressBar = (ProgressBar) rootView.findViewById(R.id.pb_loading_indicator);
 
         mRecycleView = (RecyclerView) rootView.findViewById(R.id.rv_receipt_list);
-        // Inflate the layout for this fragment View recyclerView = findViewById(R.id.rv_receipt_list);
+
         mRecycleView.setHasFixedSize(true);
 
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
         mRecycleView.setLayoutManager(mLayoutManager);
-        setupRecyclerView(mRecycleView);
+
+        parseJSONResult();
+
+        mRecycleView.setAdapter(mAdapter);
+
         return rootView;
     }
+
+    private void fetchPosts() {
+        StringRequest request = new StringRequest(Request.Method.GET, JSON_RECEIPT_URL, onPostsLoaded, onPostsError);
+
+        mRequestQueue.add(request);
+    }
+
+    private final Response.Listener<String> onPostsLoaded = new Response.Listener<String>() {
+        @Override
+        public void onResponse(String response) {
+
+            mReceiptItems = Arrays.asList()
+
+
+            Log.i("MasterListFragment", response);
+        }
+    };
+
+    private final Response.ErrorListener onPostsError = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Log.e("MasterListFragment", error.toString());
+        }
+    };
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -124,72 +187,30 @@ public class MasterListFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
+
         void onFragmentInteraction(Uri uri);
     }
 
-    private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(DummyContent.ITEMS));
+    private void GsonParse(){
+
+
+        fetchPosts();
+
     }
 
-    public class SimpleItemRecyclerViewAdapter
-            extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
+    private void parseJSONResult() {
+        try {
+            Gson gson = new Gson();
 
-        private final List<DummyContent.DummyItem> mValues;
+            Reader reader = new FileReader(JSON_RECEIPT_URL);
 
-        public SimpleItemRecyclerViewAdapter(List<DummyContent.DummyItem> items) {
-            mValues = items;
-        }
+            mReceiptItems = gson.fromJson(reader, new TypeToken<List<ReceiptItem>>() {
+            }.getType());
 
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.receipt_list_content, parent, false);
-            return new ViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mItem = mValues.get(position);
-            holder.mTitleView.setText(mValues.get(position).id);
-            holder.mContentView.setText(mValues.get(position).content);
-
-            holder.mView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    Context context = v.getContext();
-                    Intent intent = new Intent(context, ItemDetailActivity.class);
-                    intent.putExtra(ItemDetailFragment.ARG_ITEM_ID, holder.mItem.id);
-
-                    context.startActivity(intent);
-
-                }
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return mValues.size();
-        }
-
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            public final View mView;
-            public final TextView mTitleView;
-            public final TextView mContentView;
-            public DummyContent.DummyItem mItem;
-
-            public ViewHolder(View view) {
-                super(view);
-                mView = view;
-                mTitleView = (TextView) view.findViewById(R.id.tv_title_receipt);
-                mContentView = (TextView) view.findViewById(R.id.tv_content_receipt);
-            }
-
-            @Override
-            public String toString() {
-                return super.toString() + " '" + mContentView.getText() + "'";
-            }
+        } catch (Exception e) {
+            mToast = Toast.makeText(getActivity(), getString(R.string.JSON_parseError_Text), Toast.LENGTH_LONG);
+            mToast.show();
+            Log.d("This is the error", e.toString());
         }
     }
 

@@ -1,47 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card="http://schemas.android.com/tools"
-    app:cardBackgroundColor="@color/colorAccent"
     android:id="@+id/cv_receipt_list"
-    card:cardElevation="@dimen/mainActivity_Card_elevation"
-    card:cardUseCompatPadding="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/mainActivity_Card_margin"
     android:layout_marginBottom="@dimen/mainActivity_Card_margin"
     android:layout_marginLeft="@dimen/mainActivity_Card_marginLeft"
     android:layout_marginRight="@dimen/mainActivity_Card_marginRight"
-    app:cardCornerRadius="@dimen/mainActivity_Card_radious">
+    android:layout_marginTop="@dimen/mainActivity_Card_margin"
+    app:cardBackgroundColor="@color/colorPrimary"
+    app:cardCornerRadius="@dimen/mainActivity_Card_radious"
+    card:cardElevation="@dimen/mainActivity_Card_elevation"
+    card:cardUseCompatPadding="true">
 
-    <RelativeLayout
+
+    <TextView
+        android:id="@+id/tv_title_receipt"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:id="@+id/tv_title_receipt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/Title_CardView_leftMargin"
-            android:layout_marginRight="@dimen/Title_CardView_rightMargin"
-            android:layout_marginTop="@dimen/Title_CardView_topMargin"
-            android:text="Receipt"
-            android:textSize="@dimen/Title_CardView_fontSize" />
-
-        <TextView
-            android:id="@+id/tv_content_receipt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_title_receipt"
-            android:layout_marginBottom="@dimen/Content_CardView_bottomMargin"
-            android:layout_marginLeft="@dimen/Content_CardView_leftMargin"
-            android:layout_marginRight="@dimen/Content_CardView_rightMargin"
-            android:layout_marginTop="@dimen/Content_CardView_topMargin"
-            android:text="Content"
-            android:textSize="@dimen/Content_CardView_fontSize" />
-
-    </RelativeLayout>
+        android:layout_height="@dimen/mainActivity_Card_height"
+        android:gravity="center"
+        android:text="Cake"
+        android:textSize="@dimen/Title_CardView_fontSize" />
 
 
 </android.support.v7.widget.CardView>
