@@ -1,7 +1,6 @@
 package com.example.android.baking;
 
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,15 +19,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.android.baking.Utilities.NetworkUtils;
-import com.example.android.baking.dummy.ReceiptItem;
+import com.example.android.baking.ReceiptData.ReceiptItem;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
-import java.io.FileReader;
-import java.io.Reader;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
@@ -112,16 +106,6 @@ public class MasterListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.receipt_list, container, false);
 
-        mRequestQueue = Volley.newRequestQueue(getActivity());
-
-        GsonBuilder gsonbuilder = new GsonBuilder();
-
-        gsonbuilder.setDateFormat("M/d/yy hh:mm a");
-
-        gson = gsonbuilder.create();
-
-        fetchPosts();
-
         mProgressBar = (ProgressBar) rootView.findViewById(R.id.pb_loading_indicator);
 
         mRecycleView = (RecyclerView) rootView.findViewById(R.id.rv_receipt_list);
@@ -132,9 +116,15 @@ public class MasterListFragment extends Fragment {
 
         mRecycleView.setLayoutManager(mLayoutManager);
 
-        parseJSONResult();
+        mRequestQueue = Volley.newRequestQueue(getActivity());
 
-        mRecycleView.setAdapter(mAdapter);
+        GsonBuilder gsonbuilder = new GsonBuilder();
+
+        gsonbuilder.setDateFormat("M/d/yy hh:mm a");
+
+        gson = gsonbuilder.create();
+
+        fetchPosts();
 
         return rootView;
     }
@@ -143,16 +133,20 @@ public class MasterListFragment extends Fragment {
         StringRequest request = new StringRequest(Request.Method.GET, JSON_RECEIPT_URL, onPostsLoaded, onPostsError);
 
         mRequestQueue.add(request);
+
     }
 
     private final Response.Listener<String> onPostsLoaded = new Response.Listener<String>() {
         @Override
         public void onResponse(String response) {
 
-            mReceiptItems = Arrays.asList()
+            mReceiptItems = Arrays.asList(gson.fromJson(response, ReceiptItem[].class));
 
+            mAdapter = new ReceiptListAdapter(mReceiptItems);
 
-            Log.i("MasterListFragment", response);
+            mRecycleView.setAdapter(mAdapter);
+
+            Log.i("MasterListFragment", mReceiptItems.size() + " Loaded");
         }
     };
 
@@ -170,12 +164,6 @@ public class MasterListFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -190,29 +178,4 @@ public class MasterListFragment extends Fragment {
 
         void onFragmentInteraction(Uri uri);
     }
-
-    private void GsonParse(){
-
-
-        fetchPosts();
-
-    }
-
-    private void parseJSONResult() {
-        try {
-            Gson gson = new Gson();
-
-            Reader reader = new FileReader(JSON_RECEIPT_URL);
-
-            mReceiptItems = gson.fromJson(reader, new TypeToken<List<ReceiptItem>>() {
-            }.getType());
-
-        } catch (Exception e) {
-            mToast = Toast.makeText(getActivity(), getString(R.string.JSON_parseError_Text), Toast.LENGTH_LONG);
-            mToast.show();
-            Log.d("This is the error", e.toString());
-        }
-    }
-
-
 }

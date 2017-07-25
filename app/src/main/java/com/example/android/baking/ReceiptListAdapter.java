@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.android.baking.dummy.ReceiptItem;
+import com.example.android.baking.ReceiptData.ReceiptItem;
 
 import java.util.List;
 
@@ -54,7 +54,7 @@ public class ReceiptListAdapter extends RecyclerView.Adapter<ReceiptListAdapter.
 
     @Override
     public int getItemCount() {
-        return  mReceipts.size();
+        return  mReceipts == null? 0: mReceipts.size();
     }
 
 
