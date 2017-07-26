@@ -90,6 +90,7 @@ public class MasterListFragment extends Fragment {
         gson = gsonbuilder.create();
         fetchPosts();
 
+
         return rootView;
     }
 
