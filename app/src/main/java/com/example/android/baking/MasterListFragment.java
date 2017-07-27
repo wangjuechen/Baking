@@ -1,7 +1,12 @@
 package com.example.android.baking;
 
+import android.app.ActivityOptions;
+import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,9 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -19,10 +22,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.android.baking.ReceiptData.Ingredient;
 import com.example.android.baking.ReceiptData.ReceiptItem;
+import com.example.android.baking.ReceiptData.Step;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -52,6 +59,10 @@ public class MasterListFragment extends Fragment {
     private ReceiptListAdapter mAdapter;
 
     private List<ReceiptItem> mReceiptItems;
+
+    private List<Ingredient> mIngredient;
+
+    private List<Step> mStep;
 
     @BindView(R.id.tv_title_receipt)
     TextView tv_receiptTitle;

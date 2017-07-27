@@ -6,4 +6,10 @@
     <string name="title_item_detail">Item Detail</string>
 
     <string name="JSON_parseError_Text">There is error in JSON parsing</string>
+
+    <string name="ingredient_item_detailPage">Ingredient:</string>
+
+    <string name="quantity_item_datailPage">Quantity:</string>
+
+    <string name="measure_item_detailPage">Measure:</string>
 </resources>

@@ -17,9 +17,12 @@ public class ReceiptListAdapter extends RecyclerView.Adapter<ReceiptListAdapter.
 
     private List<ReceiptItem> mReceipts;
 
+
     public ReceiptListAdapter(List<ReceiptItem> items) {
         mReceipts = items;
     }
+
+
 
     @Override
     public ReceiptListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -47,21 +50,16 @@ public class ReceiptListAdapter extends RecyclerView.Adapter<ReceiptListAdapter.
         });
     }
 
-    public void setReceiptData(List<ReceiptItem> receiptitem){
-        this.mReceipts = receiptitem;
-        notifyDataSetChanged();
-    }
-
     @Override
     public int getItemCount() {
         return  mReceipts == null? 0: mReceipts.size();
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final TextView mTitleView;
-        public ReceiptItem mItem;
+    public class ViewHolder extends RecyclerView.ViewHolder{
+         final View mView;
+         final TextView mTitleView;
+         ReceiptItem mItem;
 
         public ViewHolder(View view) {
             super(view);
@@ -73,5 +71,7 @@ public class ReceiptListAdapter extends RecyclerView.Adapter<ReceiptListAdapter.
         public String toString() {
             return super.toString() + " '" + mTitleView.getText() + "'";
         }
+
+        }
     }
-}
+

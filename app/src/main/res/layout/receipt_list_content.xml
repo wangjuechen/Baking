@@ -9,7 +9,7 @@
     android:layout_marginLeft="@dimen/mainActivity_Card_marginLeft"
     android:layout_marginRight="@dimen/mainActivity_Card_marginRight"
     android:layout_marginTop="@dimen/mainActivity_Card_margin"
-    app:cardBackgroundColor="@color/colorPrimary"
+    app:cardBackgroundColor="@color/primary"
     app:cardCornerRadius="@dimen/mainActivity_Card_radious"
     card:cardElevation="@dimen/mainActivity_Card_elevation"
     card:cardUseCompatPadding="true">
