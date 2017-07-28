@@ -15,10 +15,6 @@ import java.util.List;
 
 public class ReceiptDetailsAdapter extends RecyclerView.Adapter<ReceiptDetailsAdapter.detailsViewHolder> {
 
-    private List<ReceiptItem> mReceiptItem;
-
-    private List<Ingredient> mIngredient;
-
     private List<Step> mStep;
 
     public ReceiptDetailsAdapter(List<Step> steps){
@@ -35,12 +31,12 @@ public class ReceiptDetailsAdapter extends RecyclerView.Adapter<ReceiptDetailsAd
     @Override
     public void onBindViewHolder(detailsViewHolder holder, int position) {
         holder.mStepClass = mStep.get(position);
-        holder.mShortDescripView.setText(holder.mStepClass.getShortDescription());
+        holder.mShortDescripView.setText(mStep.get(position).getShortDescription());
     }
 
     @Override
     public int getItemCount() {
-        int itemCount = (mStep == null? 0: mStep.size() + 1);
+        int itemCount = (mStep == null? 0: mStep.size());
         return itemCount;
     }
 
@@ -53,6 +49,11 @@ public class ReceiptDetailsAdapter extends RecyclerView.Adapter<ReceiptDetailsAd
             super(itemView);
             mDetailView = itemView;
             mShortDescripView = (TextView) itemView.findViewById(R.id.tv_step_shortDescription);
+        }
+
+        @Override
+        public String toString() {
+            return super.toString() + " '" + mShortDescripView.getText() + "'";
         }
     }
 }

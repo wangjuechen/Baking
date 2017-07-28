@@ -1,10 +1,15 @@
 package com.example.android.baking.ReceiptData;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Ingredient {
+import java.io.Serializable;
+
+public class Ingredient implements Serializable {
 
     @SerializedName("quantity")
     @Expose
@@ -17,6 +22,12 @@ public class Ingredient {
     @SerializedName("ingredient")
     @Expose
     private String ingredient;
+
+    protected Ingredient(Parcel in) {
+        quantity = in.readDouble();
+        measure = in.readString();
+        ingredient = in.readString();
+    }
 
     public double getQuantity() {
         return quantity;
@@ -41,5 +52,4 @@ public class Ingredient {
     public void setIngredient(String ingredient) {
         this.ingredient = ingredient;
     }
-
 }

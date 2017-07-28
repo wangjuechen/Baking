@@ -2,6 +2,8 @@ package com.example.android.baking;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.TextView;
 
 import com.example.android.baking.ReceiptData.ReceiptItem;
 
+import java.io.Serializable;
 import java.util.List;
 
 
@@ -41,8 +44,10 @@ public class ReceiptListAdapter extends RecyclerView.Adapter<ReceiptListAdapter.
             public void onClick(View v) {
 
                 Context context = v.getContext();
+
                 Intent intent = new Intent(context, ItemDetailActivity.class);
-                intent.putExtra(ItemDetailFragment.ARG_ITEM_ID, holder.mItem.getId());
+
+                intent.putExtra(ItemDetailFragment.ARG_ITEM_ID, holder.mItem);
 
                 context.startActivity(intent);
 

@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/primary"
+    android:layout_margin="@dimen/mainActivity_Card_margin">
 
     <TextView
         android:id="@+id/tv_step_shortDescription"
         android:layout_width="match_parent"
         android:layout_height="@dimen/mainActivity_Card_height"
-        android:layout_margin="@dimen/text_margin"
         android:gravity="center"
         android:elevation="@dimen/mainActivity_Card_elevation"
-        tools:text="Step 1"/>
+        tools:text="Step 1"
+        android:textSize="@dimen/Title_CardView_fontSize"
+        />
 
 </FrameLayout>

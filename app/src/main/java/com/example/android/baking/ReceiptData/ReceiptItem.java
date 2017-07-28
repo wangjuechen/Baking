@@ -1,8 +1,12 @@
 package com.example.android.baking.ReceiptData;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 
@@ -11,7 +15,7 @@ import java.util.List;
  * Android template wizards.
  * <p>
  */
-public class ReceiptItem {
+public class ReceiptItem implements Serializable{
 
     @SerializedName("id")
     @Expose
@@ -36,6 +40,11 @@ public class ReceiptItem {
     @SerializedName("image")
     @Expose
     private String image;
+
+    protected ReceiptItem(Parcel in) {
+        name = in.readString();
+        image = in.readString();
+    }
 
     public Integer getId() {
         return id;
@@ -84,5 +93,4 @@ public class ReceiptItem {
     public void setImage(String image) {
         this.image = image;
     }
-
 }
