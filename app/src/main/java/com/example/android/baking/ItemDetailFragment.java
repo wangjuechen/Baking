@@ -11,9 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.android.baking.ReceiptData.Ingredient;
-import com.example.android.baking.ReceiptData.ReceiptItem;
-import com.example.android.baking.ReceiptData.Step;
+import com.example.android.baking.RecipeData.Ingredient;
+import com.example.android.baking.RecipeData.RecipeItem;
+import com.example.android.baking.RecipeData.Step;
+import com.example.android.baking.RecyclerViewAdapters.RecipeIngredientAdapter;
+import com.example.android.baking.RecyclerViewAdapters.RecipeStepsAdapter;
 
 import java.util.List;
 
@@ -33,15 +35,23 @@ public class ItemDetailFragment extends Fragment {
      */
     public static final String ARG_ITEM_ID = "item_id";
 
-    private RecyclerView mRecycleView;
+    private RecyclerView mStepsRecycleView;
 
-    private ReceiptDetailsAdapter mAdapter;
+    private RecyclerView mIngredientRecycleView;
 
-    private final LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getActivity());
+    private RecipeStepsAdapter mStepsAdapter;
+
+    private RecipeIngredientAdapter mIngredientAdapter;
+
+    private final LinearLayoutManager mStepsLinearLayoutManager = new LinearLayoutManager(getActivity());
+
+    private final LinearLayoutManager mIngredientLinearLayoutManager = new LinearLayoutManager(getActivity());
+
+
     /**
      * The dummy content this fragment is presenting.
      */
-    private List<ReceiptItem> mItem;
+    private List<RecipeItem> mItem;
 
     private List<Ingredient> mIngredient;
 
@@ -68,14 +78,14 @@ public class ItemDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        ReceiptItem item;
+        RecipeItem item;
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
 
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
-            item = (ReceiptItem) getActivity().getIntent().getSerializableExtra(ARG_ITEM_ID);
+            item = (RecipeItem) getActivity().getIntent().getSerializableExtra(ARG_ITEM_ID);
 
             mSteps = item.getSteps();
 
@@ -88,21 +98,33 @@ public class ItemDetailFragment extends Fragment {
             }
         }
 
-        View rootView = inflater.inflate(R.layout.receipt_item_detail, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_recipe_ingreandsteps_list, container, false);
 
         ButterKnife.bind(this, rootView);
 
-        mRecycleView = (RecyclerView) rootView.findViewById(R.id.rv_item_steps);
+        mStepsRecycleView = (RecyclerView) rootView.findViewById(R.id.rv_item_steps);
 
-        mRecycleView.setHasFixedSize(true);
+        mIngredientRecycleView = (RecyclerView) rootView.findViewById(R.id.rv_item_ingredient);
 
-        mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mStepsRecycleView.setHasFixedSize(true);
 
-        mRecycleView.setLayoutManager(mLinearLayoutManager);
+        mIngredientRecycleView.setHasFixedSize(true);
 
-        mAdapter = new ReceiptDetailsAdapter(mSteps);
+        mStepsLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
-        mRecycleView.setAdapter(mAdapter);
+        mIngredientLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
+        mStepsRecycleView.setLayoutManager(mStepsLinearLayoutManager);
+
+        mIngredientRecycleView.setLayoutManager(mIngredientLinearLayoutManager);
+
+        mStepsAdapter = new RecipeStepsAdapter(mSteps);
+
+        mIngredientAdapter = new RecipeIngredientAdapter(mIngredient);
+
+        mStepsRecycleView.setAdapter(mStepsAdapter);
+
+        mIngredientRecycleView.setAdapter(mIngredientAdapter);
 
         return rootView;
     }

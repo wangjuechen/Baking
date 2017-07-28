@@ -1,43 +1,43 @@
-package com.example.android.baking;
+package com.example.android.baking.RecyclerViewAdapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.android.baking.ReceiptData.ReceiptItem;
+import com.example.android.baking.ItemDetailActivity;
+import com.example.android.baking.ItemDetailFragment;
+import com.example.android.baking.R;
+import com.example.android.baking.RecipeData.RecipeItem;
 
-import java.io.Serializable;
 import java.util.List;
 
 
-public class ReceiptListAdapter extends RecyclerView.Adapter<ReceiptListAdapter.ViewHolder> {
+public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.ViewHolder> {
 
-    private List<ReceiptItem> mReceipts;
+    private List<RecipeItem> mRecipes;
 
 
-    public ReceiptListAdapter(List<ReceiptItem> items) {
-        mReceipts = items;
+    public RecipeListAdapter(List<RecipeItem> items) {
+        mRecipes = items;
     }
 
 
 
     @Override
-    public ReceiptListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecipeListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.receipt_list_content, parent, false);
+                .inflate(R.layout.item_list_recipes_content, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mReceipts.get(position);
-        holder.mTitleView.setText(mReceipts.get(position).getName());
+        holder.mItem = mRecipes.get(position);
+        holder.mTitleView.setText(mRecipes.get(position).getName());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,14 +57,14 @@ public class ReceiptListAdapter extends RecyclerView.Adapter<ReceiptListAdapter.
 
     @Override
     public int getItemCount() {
-        return  mReceipts == null? 0: mReceipts.size();
+        return  mRecipes == null? 0: mRecipes.size();
     }
 
 
     public class ViewHolder extends RecyclerView.ViewHolder{
          final View mView;
          final TextView mTitleView;
-         ReceiptItem mItem;
+         RecipeItem mItem;
 
         public ViewHolder(View view) {
             super(view);

@@ -36,9 +36,9 @@ public class ItemListActivity extends AppCompatActivity {
             }
         });
 
-        MasterListFragment masterListFragment = new MasterListFragment();
+        ItemListFragment itemListFragment = new ItemListFragment();
         getSupportFragmentManager().beginTransaction().
-                add(R.id.receiptCardView_fragment_container, masterListFragment)
+                add(R.id.receiptCardView_fragment_container, itemListFragment)
                 .commit();
 
     }

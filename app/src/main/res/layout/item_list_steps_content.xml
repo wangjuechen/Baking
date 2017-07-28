@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/primary"
-    android:layout_margin="@dimen/mainActivity_Card_margin">
+    android:orientation="vertical"
+    android:background="@color/primary_dark">
 
     <TextView
         android:id="@+id/tv_step_shortDescription"
@@ -16,4 +16,9 @@
         android:textSize="@dimen/Title_CardView_fontSize"
         />
 
-</FrameLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_line"
+        android:background="@color/accent"/>
+
+</LinearLayout>

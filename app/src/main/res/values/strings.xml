@@ -7,9 +7,17 @@
 
     <string name="JSON_parseError_Text">There is error in JSON parsing</string>
 
-    <string name="ingredient_item_detailPage">Ingredient:</string>
+    <string name="ingredient_item_detailPage">Ingredient</string>
 
-    <string name="quantity_item_datailPage">Quantity:</string>
+    <string name="steps_item_detailPage">Step</string>
 
-    <string name="measure_item_detailPage">Measure:</string>
+    <string name="placeholder">&#160;</string>
+
+    <string name="previous_btn">Previous</string>
+
+    <string name="next_btn">Next</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

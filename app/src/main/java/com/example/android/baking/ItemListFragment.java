@@ -1,12 +1,7 @@
 package com.example.android.baking;
 
-import android.app.ActivityOptions;
-import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,14 +17,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.android.baking.ReceiptData.Ingredient;
-import com.example.android.baking.ReceiptData.ReceiptItem;
-import com.example.android.baking.ReceiptData.Step;
+import com.example.android.baking.RecipeData.Ingredient;
+import com.example.android.baking.RecipeData.RecipeItem;
+import com.example.android.baking.RecipeData.Step;
+import com.example.android.baking.RecyclerViewAdapters.RecipeListAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,12 +33,12 @@ import butterknife.BindView;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link MasterListFragment.OnFragmentInteractionListener} interface
+ * {@link ItemListFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link MasterListFragment#newInstance} factory method to
+ * Use the {@link ItemListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MasterListFragment extends Fragment {
+public class ItemListFragment extends Fragment {
 
     private String JSON_RECEIPT_URL = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
 
@@ -56,9 +50,9 @@ public class MasterListFragment extends Fragment {
 
     private RecyclerView mRecycleView;
 
-    private ReceiptListAdapter mAdapter;
+    private RecipeListAdapter mAdapter;
 
-    private List<ReceiptItem> mReceiptItems;
+    private List<RecipeItem> mRecipeItems;
 
     private List<Ingredient> mIngredient;
 
@@ -69,12 +63,12 @@ public class MasterListFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public MasterListFragment() {
+    public ItemListFragment() {
         // Required empty public constructor
     }
 
-    public static MasterListFragment newInstance(String param1, String param2) {
-        MasterListFragment fragment = new MasterListFragment();
+    public static ItemListFragment newInstance(String param1, String param2) {
+        ItemListFragment fragment = new ItemListFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -88,7 +82,7 @@ public class MasterListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.receipt_list, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_recipe_list, container, false);
 
         mRecycleView = (RecyclerView) rootView.findViewById(R.id.rv_receipt_list);
         mRecycleView.setHasFixedSize(true);
@@ -116,9 +110,9 @@ public class MasterListFragment extends Fragment {
         @Override
         public void onResponse(String response) {
 
-            mReceiptItems = Arrays.asList(gson.fromJson(response, ReceiptItem[].class));
+            mRecipeItems = Arrays.asList(gson.fromJson(response, RecipeItem[].class));
 
-            mAdapter = new ReceiptListAdapter(mReceiptItems);
+            mAdapter = new RecipeListAdapter(mRecipeItems);
 
             mRecycleView.setAdapter(mAdapter);
         }
@@ -127,7 +121,7 @@ public class MasterListFragment extends Fragment {
     private final Response.ErrorListener onPostsError = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.e("MasterListFragment", error.toString());
+            Log.e("ItemListFragment", error.toString());
         }
     };
 

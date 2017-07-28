@@ -1,8 +1,7 @@
-package com.example.android.baking.ReceiptData;
+package com.example.android.baking.RecipeData;
 
 
 import android.os.Parcel;
-import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

@@ -14,7 +14,7 @@
         android:id="@+id/rv_receipt_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/receipt_list_content">
+        tools:listitem="@layout/item_list_recipes_content">
 
     </android.support.v7.widget.RecyclerView>
 
