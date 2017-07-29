@@ -1,6 +1,7 @@
 package com.example.android.baking;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
@@ -51,7 +52,6 @@ public class ItemDetailFragment extends Fragment {
     /**
      * The dummy content this fragment is presenting.
      */
-    private List<RecipeItem> mItem;
 
     private List<Ingredient> mIngredient;
 
@@ -128,4 +128,5 @@ public class ItemDetailFragment extends Fragment {
 
         return rootView;
     }
+
 }

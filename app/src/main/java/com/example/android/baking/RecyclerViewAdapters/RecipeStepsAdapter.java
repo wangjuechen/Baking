@@ -20,7 +20,7 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
 
     private List<Step> mStep;
 
-    public RecipeStepsAdapter(List<Step> steps){
+    public RecipeStepsAdapter(List<Step> steps) {
         mStep = steps;
     }
 
@@ -50,13 +50,22 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
         });
     }
 
+
     @Override
     public int getItemCount() {
-        int itemCount = (mStep == null? 0: mStep.size());
+        int itemCount = (mStep == null ? 0 : mStep.size());
         return itemCount;
     }
 
-    public class detailsViewHolder extends RecyclerView.ViewHolder{
+    public Step getCurrentStep(int position) {
+        return position < mStep.size() ? mStep.get(position) : null;
+    }
+
+    public int getStepSize() {
+        return mStep.size();
+    }
+
+    public class detailsViewHolder extends RecyclerView.ViewHolder {
         final View mStepsView;
         final TextView mShortDescripeView;
         Step mStepClass;

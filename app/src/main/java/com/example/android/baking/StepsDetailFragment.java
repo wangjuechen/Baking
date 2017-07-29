@@ -1,5 +1,6 @@
 package com.example.android.baking;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.android.baking.RecipeData.Step;
+import com.example.android.baking.RecyclerViewAdapters.RecipeStepsAdapter;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -34,24 +36,27 @@ import butterknife.ButterKnife;
  * Use the {@link StepsDetailFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class StepsDetailFragment extends Fragment {
+public class StepsDetailFragment extends Fragment{
 
     public static final String ARG_STEP_ID = "step_id";
 
+    public static final String STEPS_ID = "passed_id";
 
 
     private SimpleExoPlayer mExoplayer;
 
+    private RecipeStepsAdapter mStepAdapter;
 
     private OnFragmentInteractionListener mListener;
 
-    private boolean mplayWhenReady;
+    private boolean mPlayWhenReady;
 
     private int currentWindow;
     private long playbackPosition;
     private String mVideoUrl;
     private String mDetailedDescription;
     private int mStepId;
+    private Step mSteps;
 
     @BindView(R.id.video_player_view)
     SimpleExoPlayerView mPlayerView;
@@ -92,19 +97,22 @@ public class StepsDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        Step steps;
 
-        if(getArguments().containsKey(ARG_STEP_ID)){
 
-            steps = (Step) getActivity().getIntent().getSerializableExtra(ARG_STEP_ID);
+        //if (getArguments().containsKey(ARG_STEP_ID)) {
 
-            mVideoUrl = steps.getVideoURL();
+        mSteps = (Step) getActivity().getIntent().getSerializableExtra(ARG_STEP_ID);
 
-            mDetailedDescription = steps.getDescription();
+        mVideoUrl = mSteps.getVideoURL();
 
-            mStepId = steps.getId();
+        mDetailedDescription = mSteps.getDescription();
 
+        if (savedInstanceState != null) {
+            mStepId = savedInstanceState.getInt(STEPS_ID);
+        } else {
+            mStepId = mSteps.getId();
         }
+
 
         View view = inflater.inflate(R.layout.fragment_steps_list, container, false);
 
@@ -116,15 +124,20 @@ public class StepsDetailFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 int newStepID = mStepId + 1;
-                mListener.onFragmentInteraction(newStepID);
+                if (newStepID < mStepAdapter.getStepSize()) {
+                    mListener.onFragmentInteraction(newStepID);
+                }
             }
         });
 
         mBtnPreciousStep.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 int newStepID = mStepId - 1;
-                mListener.onFragmentInteraction(newStepID);
+                if (newStepID >= 0) {
+                    mListener.onFragmentInteraction(newStepID);
+                }
             }
         });
 
@@ -147,7 +160,7 @@ public class StepsDetailFragment extends Fragment {
 
         mPlayerView.setPlayer(mExoplayer);
 
-        mExoplayer.setPlayWhenReady(mplayWhenReady);
+        mExoplayer.setPlayWhenReady(mPlayWhenReady);
         mExoplayer.seekTo(currentWindow, playbackPosition);
 
         Uri uri = Uri.parse(mVideoUrl);
@@ -177,17 +190,25 @@ public class StepsDetailFragment extends Fragment {
         if (mExoplayer != null) {
             playbackPosition = mExoplayer.getCurrentPosition();
             currentWindow = mExoplayer.getCurrentWindowIndex();
-            mplayWhenReady = mExoplayer.getPlayWhenReady();
+            mPlayWhenReady = mExoplayer.getPlayWhenReady();
             mExoplayer.release();
             mExoplayer = null;
         }
     }
+
 
     private MediaSource buildMediaSource(Uri uri) {
         return new ExtractorMediaSource(uri,
                 new DefaultHttpDataSourceFactory("ua"),
                 new DefaultExtractorsFactory(), null, null);
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(STEPS_ID, mStepId);
+    }
+
 
     /**
      * This interface must be implemented by activities that contain this
@@ -201,5 +222,9 @@ public class StepsDetailFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(int stepID);
+    }
+
+    public void setStep(Step step) {
+        mSteps = step;
     }
 }

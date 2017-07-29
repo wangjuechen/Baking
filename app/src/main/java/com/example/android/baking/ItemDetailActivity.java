@@ -2,14 +2,15 @@ package com.example.android.baking;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.ActionBar;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+
+import com.example.android.baking.RecyclerViewAdapters.RecipeStepsAdapter;
+
+import static android.R.attr.fragment;
 
 /**
  * An activity representing a single Item detail screen. This
@@ -17,42 +18,49 @@ import android.view.MenuItem;
  * item details are presented side-by-side with a list of items
  * in a {@link ItemListActivity}.
  */
-public class ItemDetailActivity extends AppCompatActivity implements StepsDetailFragment.OnFragmentInteractionListener{
+public class ItemDetailActivity extends AppCompatActivity implements StepsDetailFragment.OnFragmentInteractionListener {
+
+    private boolean mTwoPane = false;
+
+    private RecipeStepsAdapter mStepAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_detail);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
-        setSupportActionBar(toolbar);
 
-        // Show the Up button in the action bar.
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        if (!mTwoPane) {
+            Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
+            setSupportActionBar(toolbar);
 
-        // savedInstanceState is non-null when there is fragment state
-        // saved from previous configurations of this activity
-        // (e.g. when rotating the screen from portrait to landscape).
-        // In this case, the fragment will automatically be re-added
-        // to its container so we don't need to manually add it.
-        // For more information, see the Fragments API guide at:
-        //
-        // http://developer.android.com/guide/components/fragments.html
-        //
-        if (savedInstanceState == null) {
-            // Create the detail fragment and add it to the activity
-            // using a fragment transaction.
-            Bundle arguments = new Bundle();
-            arguments.putString(ItemDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(ItemDetailFragment.ARG_ITEM_ID));
-            ItemDetailFragment fragment = new ItemDetailFragment();
-            fragment.setArguments(arguments);
+            // Show the Up button in the action bar.
+            ActionBar actionBar = getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setDisplayHomeAsUpEnabled(true);
+            }
 
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.receiptView_details_fragment_container, fragment)
-                    .commit();
+            // savedInstanceState is non-null when there is fragment state
+            // saved from previous configurations of this activity
+            // (e.g. when rotating the screen from portrait to landscape).
+            // In this case, the fragment will automatically be re-added
+            // to its container so we don't need to manually add it.
+            // For more information, see the Fragments API guide at:
+            //
+            // http://developer.android.com/guide/components/fragments.html
+            //
+            if (savedInstanceState == null) {
+                // Create the detail fragment and add it to the activity
+                // using a fragment transaction.
+                Bundle arguments = new Bundle();
+                arguments.putString(ItemDetailFragment.ARG_ITEM_ID,
+                        getIntent().getStringExtra(ItemDetailFragment.ARG_ITEM_ID));
+                ItemDetailFragment fragment = new ItemDetailFragment();
+                fragment.setArguments(arguments);
+
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.receiptView_details_fragment_container, fragment)
+                        .commit();
+            }
         }
     }
 
@@ -73,13 +81,21 @@ public class ItemDetailActivity extends AppCompatActivity implements StepsDetail
         return super.onOptionsItemSelected(item);
     }
 
-    public void onFragmentInteraction(int stepID){
+    public void onFragmentInteraction(int stepID) {
+        ItemDetailFragment itemDetailFragment = new ItemDetailFragment();
 
-        Intent intent = new Intent(this, StepsDetailActivity.class);
+        StepsDetailFragment stepFragment = new StepsDetailFragment();
+        if (mTwoPane) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.receiptView_details_fragment_container, itemDetailFragment)
+                    .commit();
 
-        intent.putExtra("step_ID",stepID);
 
-        
+        } else {
+            stepFragment.setStep(mStepAdapter.getCurrentStep(stepID));
+        }
 
     }
+
+
 }
