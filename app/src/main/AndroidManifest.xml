@@ -29,6 +29,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.android.baking.ItemListActivity" />
         </activity>
+
+        <activity
+            android:name=".StepsDetailActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:parentActivityName=".ItemDetailActivity"/>
     </application>
 
 </manifest>

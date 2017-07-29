@@ -17,7 +17,7 @@ import android.view.MenuItem;
  * item details are presented side-by-side with a list of items
  * in a {@link ItemListActivity}.
  */
-public class ItemDetailActivity extends AppCompatActivity {
+public class ItemDetailActivity extends AppCompatActivity implements StepsDetailFragment.OnFragmentInteractionListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,5 +71,15 @@ public class ItemDetailActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onFragmentInteraction(int stepID){
+
+        Intent intent = new Intent(this, StepsDetailActivity.class);
+
+        intent.putExtra("step_ID",stepID);
+
+        
+
     }
 }

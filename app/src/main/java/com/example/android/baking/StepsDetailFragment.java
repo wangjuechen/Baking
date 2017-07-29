@@ -1,6 +1,5 @@
 package com.example.android.baking;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,9 +9,18 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.android.exoplayer2.ExoPlayer;
+import com.example.android.baking.RecipeData.Step;
+import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.DefaultRenderersFactory;
+import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,15 +36,28 @@ import butterknife.ButterKnife;
  */
 public class StepsDetailFragment extends Fragment {
 
+    public static final String ARG_STEP_ID = "step_id";
+
+
+
     private SimpleExoPlayer mExoplayer;
+
 
     private OnFragmentInteractionListener mListener;
 
+    private boolean mplayWhenReady;
+
+    private int currentWindow;
+    private long playbackPosition;
+    private String mVideoUrl;
+    private String mDetailedDescription;
+    private int mStepId;
+
     @BindView(R.id.video_player_view)
-    SimpleExoPlayer mPlayerView;
+    SimpleExoPlayerView mPlayerView;
 
     @BindView(R.id.tv_step_description)
-    TextView mStepDescription;
+    TextView mtvStepDescription;
 
     @BindView(R.id.btn_previous_step)
     Button mBtnPreciousStep;
@@ -71,19 +92,102 @@ public class StepsDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_steps_list, container,false);
+        Step steps;
 
-        ButterKnife.bind(this,view);
+        if(getArguments().containsKey(ARG_STEP_ID)){
+
+            steps = (Step) getActivity().getIntent().getSerializableExtra(ARG_STEP_ID);
+
+            mVideoUrl = steps.getVideoURL();
+
+            mDetailedDescription = steps.getDescription();
+
+            mStepId = steps.getId();
+
+        }
+
+        View view = inflater.inflate(R.layout.fragment_steps_list, container, false);
+
+        ButterKnife.bind(this, view);
+
+        mtvStepDescription.setText(mDetailedDescription);
+
+        mBtnNextStep.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int newStepID = mStepId + 1;
+                mListener.onFragmentInteraction(newStepID);
+            }
+        });
+
+        mBtnPreciousStep.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int newStepID = mStepId - 1;
+                mListener.onFragmentInteraction(newStepID);
+            }
+        });
 
         return view;
     }
 
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (Util.SDK_INT > 23) {
+            initializePlayer();
+        }
+
+    }
+
+    private void initializePlayer() {
+        mExoplayer = ExoPlayerFactory.newSimpleInstance(
+                new DefaultRenderersFactory(getContext()),
+                new DefaultTrackSelector(), new DefaultLoadControl());
+
+        mPlayerView.setPlayer(mExoplayer);
+
+        mExoplayer.setPlayWhenReady(mplayWhenReady);
+        mExoplayer.seekTo(currentWindow, playbackPosition);
+
+        Uri uri = Uri.parse(mVideoUrl);
+        MediaSource mediaSource = buildMediaSource(uri);
+        mExoplayer.prepare(mediaSource, true, false);
+        mExoplayer.setPlayWhenReady(true);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (Util.SDK_INT <= 23) {
+            releasePlayer();
+        }
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (Util.SDK_INT > 23) {
+            releasePlayer();
         }
     }
 
+    private void releasePlayer() {
+        if (mExoplayer != null) {
+            playbackPosition = mExoplayer.getCurrentPosition();
+            currentWindow = mExoplayer.getCurrentWindowIndex();
+            mplayWhenReady = mExoplayer.getPlayWhenReady();
+            mExoplayer.release();
+            mExoplayer = null;
+        }
+    }
+
+    private MediaSource buildMediaSource(Uri uri) {
+        return new ExtractorMediaSource(uri,
+                new DefaultHttpDataSourceFactory("ua"),
+                new DefaultExtractorsFactory(), null, null);
+    }
 
     /**
      * This interface must be implemented by activities that contain this
@@ -96,6 +200,6 @@ public class StepsDetailFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction(int stepID);
     }
 }
