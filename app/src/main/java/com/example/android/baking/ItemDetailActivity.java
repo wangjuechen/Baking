@@ -76,19 +76,14 @@ public class ItemDetailActivity extends AppCompatActivity implements StepsDetail
             // http://developer.android.com/guide/components/fragments.html
             //
         } else {
+
             StepsDetailFragment stepsDetailFragment = new StepsDetailFragment();
 
-            mSteps = getIntent().getParcelableArrayListExtra(StepsDetailFragment.STEPS);
 
-            mVideoUrl = getIntent().getStringExtra(STEP_URL);
-            mDetailedDescription = getIntent().getStringExtra(STEP_DESCRIBE);
-            mStepId = getIntent().getIntExtra(STEP_ID, 0);
-            mStepsSize = mSteps.size();
-
-            stepsDetailFragment.setStepId(mStepId);
-            stepsDetailFragment.setDetailedDescription(mDetailedDescription);
-            stepsDetailFragment.setVideoUrl(mVideoUrl);
-            stepsDetailFragment.setStepsSize(mStepsSize);
+            stepsDetailFragment.setStepId(0);
+            stepsDetailFragment.setDetailedDescription("1");
+            stepsDetailFragment.setVideoUrl("1");
+            stepsDetailFragment.setStepsSize(2);
 
             Bundle arguments = new Bundle();
             arguments.putString(STEP_ID,
@@ -101,8 +96,6 @@ public class ItemDetailActivity extends AppCompatActivity implements StepsDetail
                     .commit();
 
         }
-
-
     }
 
     @Override

@@ -89,7 +89,7 @@ public class ItemListFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_recipe_list, container, false);
 
-        if (rootView.findViewById(R.id.receiptGridView_fragment_container) != null) {
+        if (container.findViewById(R.id.receiptGridView_fragment_container) != null) {
             mTabletDisplay = true;
         }
 
