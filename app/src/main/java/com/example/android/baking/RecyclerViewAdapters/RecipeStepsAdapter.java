@@ -48,6 +48,7 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
 
                 Bundle bundle = new Bundle();
 
+                //TODO: here need to modified
                 Intent intent = new Intent(context, StepsDetailActivity.class);
 
                 bundle.putString(StepsDetailFragment.STEP_DESCRIBE, holder.mStepClass.getDescription());

@@ -3,6 +3,7 @@ package com.example.android.baking;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -58,6 +59,8 @@ public class ItemListFragment extends Fragment {
 
     private List<Step> mStep;
 
+    private boolean mTabletDisplay;
+
     @BindView(R.id.tv_title_receipt)
     TextView tv_receiptTitle;
 
@@ -82,12 +85,26 @@ public class ItemListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
         View rootView = inflater.inflate(R.layout.fragment_recipe_list, container, false);
+
+        if (rootView.findViewById(R.id.receiptGridView_fragment_container) != null) {
+            mTabletDisplay = true;
+        }
+
 
         mRecycleView = (RecyclerView) rootView.findViewById(R.id.rv_receipt_list);
         mRecycleView.setHasFixedSize(true);
-        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecycleView.setLayoutManager(mLayoutManager);
+
+        if(mTabletDisplay){
+            int numOfCol = 3;
+            mRecycleView.setLayoutManager(new GridLayoutManager(getActivity(), numOfCol));
+
+        }else{
+            mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+            mRecycleView.setLayoutManager(mLayoutManager);
+        }
 
         mRequestQueue = Volley.newRequestQueue(getActivity());
         GsonBuilder gsonbuilder = new GsonBuilder();

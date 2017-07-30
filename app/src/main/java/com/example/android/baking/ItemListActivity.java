@@ -17,10 +17,12 @@ import android.view.View;
  */
 public class ItemListActivity extends AppCompatActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_list);
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -37,9 +39,17 @@ public class ItemListActivity extends AppCompatActivity {
         });
 
         ItemListFragment itemListFragment = new ItemListFragment();
-        getSupportFragmentManager().beginTransaction().
-                add(R.id.receiptCardView_fragment_container, itemListFragment)
-                .commit();
+
+        if (findViewById(R.id.receiptGridView_fragment_container) != null) {
+            getSupportFragmentManager().beginTransaction().
+                    add(R.id.receiptGridView_fragment_container, itemListFragment)
+                    .commit();
+        } else {
+            getSupportFragmentManager().beginTransaction().
+                    add(R.id.receiptCardView_fragment_container, itemListFragment)
+                    .commit();
+        }
+
 
     }
 }

@@ -49,7 +49,7 @@ public class StepsDetailFragment extends Fragment {
 
     public static final String STEPS = "steps";
 
-    private SimpleExoPlayer mExoplayer;
+    private SimpleExoPlayer mExoPlayer;
 
     private RecipeStepsAdapter mStepAdapter;
 
@@ -147,19 +147,19 @@ public class StepsDetailFragment extends Fragment {
     }
 
     private void initializePlayer() {
-        mExoplayer = ExoPlayerFactory.newSimpleInstance(
+        mExoPlayer = ExoPlayerFactory.newSimpleInstance(
                 new DefaultRenderersFactory(getContext()),
                 new DefaultTrackSelector(), new DefaultLoadControl());
 
-        mPlayerView.setPlayer(mExoplayer);
+        mPlayerView.setPlayer(mExoPlayer);
 
-        mExoplayer.setPlayWhenReady(mPlayWhenReady);
-        mExoplayer.seekTo(currentWindow, playbackPosition);
+        mExoPlayer.setPlayWhenReady(mPlayWhenReady);
+        mExoPlayer.seekTo(currentWindow, playbackPosition);
 
         Uri uri = Uri.parse(mVideoUrl);
         MediaSource mediaSource = buildMediaSource(uri);
-        mExoplayer.prepare(mediaSource, true, false);
-        mExoplayer.setPlayWhenReady(true);
+        mExoPlayer.prepare(mediaSource, true, false);
+        mExoPlayer.setPlayWhenReady(true);
     }
 
     @Override
@@ -180,12 +180,12 @@ public class StepsDetailFragment extends Fragment {
     }
 
     private void releasePlayer() {
-        if (mExoplayer != null) {
-            playbackPosition = mExoplayer.getCurrentPosition();
-            currentWindow = mExoplayer.getCurrentWindowIndex();
-            mPlayWhenReady = mExoplayer.getPlayWhenReady();
-            mExoplayer.release();
-            mExoplayer = null;
+        if (mExoPlayer != null) {
+            playbackPosition = mExoPlayer.getCurrentPosition();
+            currentWindow = mExoPlayer.getCurrentWindowIndex();
+            mPlayWhenReady = mExoPlayer.getPlayWhenReady();
+            mExoPlayer.release();
+            mExoPlayer = null;
         }
     }
 
@@ -209,7 +209,7 @@ public class StepsDetailFragment extends Fragment {
             mListener = (OnFragmentInteractionListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
-                    + " must implement OnHeadlineSelectedListener");
+                    + " must implement OnFragmentInteractionListener");
         }
     }
 

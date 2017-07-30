@@ -8,9 +8,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.example.android.baking.RecipeData.Step;
 import com.example.android.baking.RecyclerViewAdapters.RecipeStepsAdapter;
 
-import static android.R.attr.fragment;
+import java.util.List;
+
+import static com.example.android.baking.StepsDetailFragment.STEP_DESCRIBE;
+import static com.example.android.baking.StepsDetailFragment.STEP_ID;
+import static com.example.android.baking.StepsDetailFragment.STEP_URL;
 
 /**
  * An activity representing a single Item detail screen. This
@@ -18,16 +23,38 @@ import static android.R.attr.fragment;
  * item details are presented side-by-side with a list of items
  * in a {@link ItemListActivity}.
  */
-public class ItemDetailActivity extends AppCompatActivity {
+public class ItemDetailActivity extends AppCompatActivity implements StepsDetailFragment.OnFragmentInteractionListener{
 
     private boolean mTwoPane = false;
 
-    private RecipeStepsAdapter mStepAdapter;
+    private int mStepId;
+    private String mDetailedDescription;
+    private String mVideoUrl;
+    private int mStepsSize;
+    private List<Step> mSteps;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_detail);
+
+        if (findViewById(R.id.tablet_linear_layout) != null) {
+            mTwoPane = true;
+        }
+
+        if (savedInstanceState == null) {
+            // Create the detail fragment and add it to the activity
+            // using a fragment transaction.
+            Bundle arguments = new Bundle();
+            arguments.putString(ItemDetailFragment.ARG_ITEM_ID,
+                    getIntent().getStringExtra(ItemDetailFragment.ARG_ITEM_ID));
+            ItemDetailFragment fragment = new ItemDetailFragment();
+            fragment.setArguments(arguments);
+
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.receiptView_details_fragment_container, fragment)
+                    .commit();
+        }
 
         if (!mTwoPane) {
             Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
@@ -48,20 +75,34 @@ public class ItemDetailActivity extends AppCompatActivity {
             //
             // http://developer.android.com/guide/components/fragments.html
             //
-            if (savedInstanceState == null) {
-                // Create the detail fragment and add it to the activity
-                // using a fragment transaction.
-                Bundle arguments = new Bundle();
-                arguments.putString(ItemDetailFragment.ARG_ITEM_ID,
-                        getIntent().getStringExtra(ItemDetailFragment.ARG_ITEM_ID));
-                ItemDetailFragment fragment = new ItemDetailFragment();
-                fragment.setArguments(arguments);
+        } else {
+            StepsDetailFragment stepsDetailFragment = new StepsDetailFragment();
 
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.receiptView_details_fragment_container, fragment)
-                        .commit();
-            }
+            mSteps = getIntent().getParcelableArrayListExtra(StepsDetailFragment.STEPS);
+
+            mVideoUrl = getIntent().getStringExtra(STEP_URL);
+            mDetailedDescription = getIntent().getStringExtra(STEP_DESCRIBE);
+            mStepId = getIntent().getIntExtra(STEP_ID, 0);
+            mStepsSize = mSteps.size();
+
+            stepsDetailFragment.setStepId(mStepId);
+            stepsDetailFragment.setDetailedDescription(mDetailedDescription);
+            stepsDetailFragment.setVideoUrl(mVideoUrl);
+            stepsDetailFragment.setStepsSize(mStepsSize);
+
+            Bundle arguments = new Bundle();
+            arguments.putString(STEP_ID,
+                    getIntent().getStringExtra(STEP_ID));
+
+            stepsDetailFragment.setArguments(arguments);
+
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.steps_fragment_container, stepsDetailFragment)
+                    .commit();
+
         }
+
+
     }
 
     @Override
@@ -81,4 +122,21 @@ public class ItemDetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onFragmentInteraction(int stepID) {
+        StepsDetailFragment stepFragment = new StepsDetailFragment();
+
+        mVideoUrl = mSteps.get(stepID).getVideoURL();
+        mDetailedDescription = mSteps.get(stepID).getDescription();
+        mStepsSize = mSteps.size();
+
+        stepFragment.setStepId(stepID);
+        stepFragment.setDetailedDescription(mDetailedDescription);
+        stepFragment.setVideoUrl(mVideoUrl);
+        stepFragment.setStepsSize(mStepsSize);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.steps_fragment_container, stepFragment)
+                .commit();
+    }
 }
