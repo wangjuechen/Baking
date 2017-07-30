@@ -18,7 +18,7 @@ import static android.R.attr.fragment;
  * item details are presented side-by-side with a list of items
  * in a {@link ItemListActivity}.
  */
-public class ItemDetailActivity extends AppCompatActivity implements StepsDetailFragment.OnFragmentInteractionListener {
+public class ItemDetailActivity extends AppCompatActivity {
 
     private boolean mTwoPane = false;
 
@@ -80,22 +80,5 @@ public class ItemDetailActivity extends AppCompatActivity implements StepsDetail
         }
         return super.onOptionsItemSelected(item);
     }
-
-    public void onFragmentInteraction(int stepID) {
-        ItemDetailFragment itemDetailFragment = new ItemDetailFragment();
-
-        StepsDetailFragment stepFragment = new StepsDetailFragment();
-        if (mTwoPane) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.receiptView_details_fragment_container, itemDetailFragment)
-                    .commit();
-
-
-        } else {
-            stepFragment.setStep(mStepAdapter.getCurrentStep(stepID));
-        }
-
-    }
-
 
 }

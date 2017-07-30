@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.baking.RecipeData.Step;
 import com.example.android.baking.RecyclerViewAdapters.RecipeStepsAdapter;
@@ -36,18 +37,23 @@ import butterknife.ButterKnife;
  * Use the {@link StepsDetailFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class StepsDetailFragment extends Fragment{
+public class StepsDetailFragment extends Fragment {
 
-    public static final String ARG_STEP_ID = "step_id";
+    public static final String STEP_ID = "step_id";
 
-    public static final String STEPS_ID = "passed_id";
+    public static final String STEP_URL = "step_Url";
 
+    public static final String STEP_DESCRIBE = "step_describe";
+
+    public static final String STEPS_SIZE = "steps_size";
+
+    public static final String STEPS = "steps";
 
     private SimpleExoPlayer mExoplayer;
 
     private RecipeStepsAdapter mStepAdapter;
 
-    private OnFragmentInteractionListener mListener;
+    OnFragmentInteractionListener mListener;
 
     private boolean mPlayWhenReady;
 
@@ -56,6 +62,7 @@ public class StepsDetailFragment extends Fragment{
     private String mVideoUrl;
     private String mDetailedDescription;
     private int mStepId;
+    private int mStepsSize;
     private Step mSteps;
 
     @BindView(R.id.video_player_view)
@@ -96,23 +103,6 @@ public class StepsDetailFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-
-
-        //if (getArguments().containsKey(ARG_STEP_ID)) {
-
-        mSteps = (Step) getActivity().getIntent().getSerializableExtra(ARG_STEP_ID);
-
-        mVideoUrl = mSteps.getVideoURL();
-
-        mDetailedDescription = mSteps.getDescription();
-
-        if (savedInstanceState != null) {
-            mStepId = savedInstanceState.getInt(STEPS_ID);
-        } else {
-            mStepId = mSteps.getId();
-        }
-
 
         View view = inflater.inflate(R.layout.fragment_steps_list, container, false);
 
@@ -124,8 +114,10 @@ public class StepsDetailFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 int newStepID = mStepId + 1;
-                if (newStepID < mStepAdapter.getStepSize()) {
+                if (newStepID < mStepsSize) {
                     mListener.onFragmentInteraction(newStepID);
+                } else {
+                    Toast.makeText(getContext(), getString(R.string.toast_nextBtn), Toast.LENGTH_SHORT);
                 }
             }
         });
@@ -133,10 +125,11 @@ public class StepsDetailFragment extends Fragment{
         mBtnPreciousStep.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 int newStepID = mStepId - 1;
                 if (newStepID >= 0) {
                     mListener.onFragmentInteraction(newStepID);
+                } else {
+                    Toast.makeText(getContext(), getString(R.string.toast_previousBtn), Toast.LENGTH_SHORT);
                 }
             }
         });
@@ -206,9 +199,19 @@ public class StepsDetailFragment extends Fragment{
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(STEPS_ID, mStepId);
+        outState.putInt(STEP_ID, mStepId);
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mListener = (OnFragmentInteractionListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnHeadlineSelectedListener");
+        }
+    }
 
     /**
      * This interface must be implemented by activities that contain this
@@ -224,7 +227,19 @@ public class StepsDetailFragment extends Fragment{
         void onFragmentInteraction(int stepID);
     }
 
-    public void setStep(Step step) {
-        mSteps = step;
+    public void setVideoUrl(String url) {
+        mVideoUrl = url;
+    }
+
+    public void setDetailedDescription(String description) {
+        mDetailedDescription = description;
+    }
+
+    public void setStepId(int id) {
+        mStepId = id;
+    }
+
+    public void setStepsSize(int size) {
+        mStepsSize = size;
     }
 }
