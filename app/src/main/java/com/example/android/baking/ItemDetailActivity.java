@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.example.android.baking.RecipeData.RecipeItem;
 import com.example.android.baking.RecipeData.Step;
 import com.example.android.baking.RecyclerViewAdapters.RecipeStepsAdapter;
 
@@ -33,6 +34,7 @@ public class ItemDetailActivity extends AppCompatActivity implements StepsDetail
     private String mVideoUrl;
     private int mStepsSize;
     private List<Step> mSteps;
+    private RecipeItem mItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,11 +84,16 @@ public class ItemDetailActivity extends AppCompatActivity implements StepsDetail
 
             StepsDetailFragment stepsDetailFragment = new StepsDetailFragment();
 
-            //TODO: here need to modified , to set initial content is index 0
+            mItem = (RecipeItem) getIntent().getSerializableExtra(ItemDetailFragment.ARG_ITEM_ID);
+
+            Step step = mItem.getSteps().get(0);
+
+            stepsDetailFragment.setItem(mItem);
+            stepsDetailFragment.setStepList(mItem.getSteps());
             stepsDetailFragment.setStepId(0);
-            stepsDetailFragment.setDetailedDescription("1");
-            stepsDetailFragment.setVideoUrl("1");
-            stepsDetailFragment.setStepsSize(2);
+            stepsDetailFragment.setDetailedDescription(step.getDescription());
+            stepsDetailFragment.setVideoUrl(step.getVideoURL());
+            stepsDetailFragment.setStepsSize(mItem.getSteps().size());
 
             Bundle arguments = new Bundle();
             arguments.putString(STEP_ID,
@@ -125,6 +132,7 @@ public class ItemDetailActivity extends AppCompatActivity implements StepsDetail
         mDetailedDescription = stepList.get(stepID).getDescription();
         mStepsSize = stepList.size();
 
+        stepFragment.setItem(mItem);
         stepFragment.setStepList(stepList);
         stepFragment.setStepId(stepID);
         stepFragment.setDetailedDescription(mDetailedDescription);
@@ -135,7 +143,7 @@ public class ItemDetailActivity extends AppCompatActivity implements StepsDetail
                 .replace(R.id.steps_fragment_container, stepFragment)
                 .commit();
     }
-
+    //TODO need modified, need RecipeItem as argument sent in here
     @Override
     public void onStepsVideoTwoPane(Step step, List<Step> steps) {
 
@@ -143,6 +151,8 @@ public class ItemDetailActivity extends AppCompatActivity implements StepsDetail
             Bundle bundle = new Bundle();
 
             Intent intent = new Intent(this, StepsDetailActivity.class);
+
+            bundle.putSerializable("ITEM", mItem);
 
             bundle.putString(StepsDetailFragment.STEP_DESCRIBE, step.getDescription());
 
@@ -159,13 +169,14 @@ public class ItemDetailActivity extends AppCompatActivity implements StepsDetail
             startActivity(intent);
 
         } else {
+
             StepsDetailFragment stepFragment = new StepsDetailFragment();
 
             mVideoUrl = steps.get(step.getId()).getVideoURL();
             mDetailedDescription = steps.get(step.getId()).getDescription();
             mStepsSize = steps.size();
 
-
+            stepFragment.setItem(mItem);
             stepFragment.setStepId(step.getId());
             stepFragment.setDetailedDescription(mDetailedDescription);
             stepFragment.setVideoUrl(mVideoUrl);
@@ -175,7 +186,5 @@ public class ItemDetailActivity extends AppCompatActivity implements StepsDetail
                     .replace(R.id.steps_fragment_container, stepFragment)
                     .commit();
         }
-
-
     }
 }

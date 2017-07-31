@@ -2,6 +2,7 @@ package com.example.android.baking;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,12 +30,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ItemListFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link ItemListFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -55,16 +56,7 @@ public class ItemListFragment extends Fragment {
 
     private List<RecipeItem> mRecipeItems;
 
-    private List<Ingredient> mIngredient;
-
-    private List<Step> mStep;
-
     private boolean mTabletDisplay;
-
-    @BindView(R.id.tv_title_receipt)
-    TextView tv_receiptTitle;
-
-    private OnFragmentInteractionListener mListener;
 
     public ItemListFragment() {
         // Required empty public constructor
@@ -89,10 +81,9 @@ public class ItemListFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_recipe_list, container, false);
 
-        if (container.findViewById(R.id.receiptGridView_fragment_container) != null) {
+        if (getResources().getDisplayMetrics().widthPixels > 1600) {
             mTabletDisplay = true;
         }
-
 
         mRecycleView = (RecyclerView) rootView.findViewById(R.id.rv_receipt_list);
         mRecycleView.setHasFixedSize(true);
@@ -111,7 +102,6 @@ public class ItemListFragment extends Fragment {
         gsonbuilder.setDateFormat("M/d/yy hh:mm a");
         gson = gsonbuilder.create();
         fetchPosts();
-
 
         return rootView;
     }
@@ -142,15 +132,4 @@ public class ItemListFragment extends Fragment {
         }
     };
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    public interface OnFragmentInteractionListener {
-
-        void onFragmentInteraction(Uri uri);
-    }
 }

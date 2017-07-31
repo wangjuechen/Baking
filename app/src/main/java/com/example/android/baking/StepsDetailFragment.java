@@ -3,6 +3,7 @@ package com.example.android.baking;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.baking.RecipeData.RecipeItem;
 import com.example.android.baking.RecipeData.Step;
 import com.example.android.baking.RecyclerViewAdapters.RecipeStepsAdapter;
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -25,6 +27,7 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -67,6 +70,7 @@ public class StepsDetailFragment extends Fragment {
     private int mStepsSize;
     private List<Step> mStepList;
     private Step mSteps;
+    private RecipeItem mItem;
 
     @BindView(R.id.video_player_view)
     SimpleExoPlayerView mPlayerView;
@@ -106,7 +110,21 @@ public class StepsDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(STEP_ID)) {
 
+                mItem = (RecipeItem ) savedInstanceState.getSerializable(ItemDetailFragment.ARG_ITEM_ID);
+
+                mStepList = savedInstanceState.getParcelableArrayList(STEP_ID);
+
+                mStepId = savedInstanceState.getInt("ID");
+
+                mDetailedDescription = mStepList.get(mStepId).getDescription();
+
+                mVideoUrl = mStepList.get(mStepId).getVideoURL();
+
+            }
+        }
         View view = inflater.inflate(R.layout.fragment_steps_list, container, false);
 
         ButterKnife.bind(this, view);
@@ -137,6 +155,10 @@ public class StepsDetailFragment extends Fragment {
             }
         });
 
+        if (Util.SDK_INT > 23) {
+            initializePlayer();
+        }
+
         return view;
     }
 
@@ -162,7 +184,7 @@ public class StepsDetailFragment extends Fragment {
         Uri uri = Uri.parse(mVideoUrl);
         MediaSource mediaSource = buildMediaSource(uri);
         mExoPlayer.prepare(mediaSource, true, false);
-        mExoPlayer.setPlayWhenReady(true);
+        //mExoPlayer.setPlayWhenReady(true);
     }
 
     @Override
@@ -202,7 +224,10 @@ public class StepsDetailFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(STEP_ID, mStepId);
+        outState.putSerializable("ITEM", mItem);
+        outState.putParcelableArrayList(STEP_ID, (ArrayList<? extends Parcelable>) mStepList);
+        outState.putInt("ID", mStepId);
+
     }
 
     @Override
@@ -230,7 +255,11 @@ public class StepsDetailFragment extends Fragment {
         void onFragmentInteraction(int stepID, List<Step> steps);
     }
 
-    public void setStepList(List<Step> step){
+    public void setItem(RecipeItem item) {
+        mItem = item;
+    }
+
+    public void setStepList(List<Step> step) {
         mStepList = step;
     }
 

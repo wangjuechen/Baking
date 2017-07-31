@@ -49,8 +49,6 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
 
                 mFragmentListener.onStepsVideoTwoPane(holder.mStepClass, mStep);
 
-                //TODO: here need to modified, cannot start StepDetailActivity.class when twoPane
-
             }
         });
     }
