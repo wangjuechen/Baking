@@ -2,6 +2,7 @@ package com.example.android.baking;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -11,11 +12,10 @@ import android.view.MenuItem;
 import com.example.android.baking.RecipeData.Step;
 import com.example.android.baking.RecyclerViewAdapters.RecipeStepsAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.android.baking.StepsDetailFragment.STEP_DESCRIBE;
 import static com.example.android.baking.StepsDetailFragment.STEP_ID;
-import static com.example.android.baking.StepsDetailFragment.STEP_URL;
 
 /**
  * An activity representing a single Item detail screen. This
@@ -23,7 +23,8 @@ import static com.example.android.baking.StepsDetailFragment.STEP_URL;
  * item details are presented side-by-side with a list of items
  * in a {@link ItemListActivity}.
  */
-public class ItemDetailActivity extends AppCompatActivity implements StepsDetailFragment.OnFragmentInteractionListener{
+public class ItemDetailActivity extends AppCompatActivity implements StepsDetailFragment.OnFragmentInteractionListener,
+        RecipeStepsAdapter.onStepsVideoFragment {
 
     private boolean mTwoPane = false;
 
@@ -41,6 +42,7 @@ public class ItemDetailActivity extends AppCompatActivity implements StepsDetail
         if (findViewById(R.id.tablet_linear_layout) != null) {
             mTwoPane = true;
         }
+
 
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
@@ -77,9 +79,10 @@ public class ItemDetailActivity extends AppCompatActivity implements StepsDetail
             //
         } else {
 
+
             StepsDetailFragment stepsDetailFragment = new StepsDetailFragment();
 
-
+            //TODO: here need to modified , to set initial content is index 0
             stepsDetailFragment.setStepId(0);
             stepsDetailFragment.setDetailedDescription("1");
             stepsDetailFragment.setVideoUrl("1");
@@ -115,14 +118,14 @@ public class ItemDetailActivity extends AppCompatActivity implements StepsDetail
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onFragmentInteraction(int stepID) {
+    public void onFragmentInteraction(int stepID, List<Step> stepList) {
         StepsDetailFragment stepFragment = new StepsDetailFragment();
 
-        mVideoUrl = mSteps.get(stepID).getVideoURL();
-        mDetailedDescription = mSteps.get(stepID).getDescription();
-        mStepsSize = mSteps.size();
+        mVideoUrl = stepList.get(stepID).getVideoURL();
+        mDetailedDescription = stepList.get(stepID).getDescription();
+        mStepsSize = stepList.size();
 
+        stepFragment.setStepList(stepList);
         stepFragment.setStepId(stepID);
         stepFragment.setDetailedDescription(mDetailedDescription);
         stepFragment.setVideoUrl(mVideoUrl);
@@ -131,5 +134,48 @@ public class ItemDetailActivity extends AppCompatActivity implements StepsDetail
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.steps_fragment_container, stepFragment)
                 .commit();
+    }
+
+    @Override
+    public void onStepsVideoTwoPane(Step step, List<Step> steps) {
+
+        if (!mTwoPane) {
+            Bundle bundle = new Bundle();
+
+            Intent intent = new Intent(this, StepsDetailActivity.class);
+
+            bundle.putString(StepsDetailFragment.STEP_DESCRIBE, step.getDescription());
+
+            bundle.putInt(StepsDetailFragment.STEP_ID, step.getId());
+
+            bundle.putString(StepsDetailFragment.STEP_URL, step.getVideoURL());
+
+            bundle.putInt(StepsDetailFragment.STEPS_SIZE, steps.size());
+
+            bundle.putParcelableArrayList(StepsDetailFragment.STEPS, (ArrayList<? extends Parcelable>) steps);
+
+            intent.putExtras(bundle);
+
+            startActivity(intent);
+
+        } else {
+            StepsDetailFragment stepFragment = new StepsDetailFragment();
+
+            mVideoUrl = steps.get(step.getId()).getVideoURL();
+            mDetailedDescription = steps.get(step.getId()).getDescription();
+            mStepsSize = steps.size();
+
+
+            stepFragment.setStepId(step.getId());
+            stepFragment.setDetailedDescription(mDetailedDescription);
+            stepFragment.setVideoUrl(mVideoUrl);
+            stepFragment.setStepsSize(mStepsSize);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.steps_fragment_container, stepFragment)
+                    .commit();
+        }
+
+
     }
 }

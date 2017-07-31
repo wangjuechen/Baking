@@ -28,6 +28,8 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
         mStep = steps;
     }
 
+    onStepsVideoFragment mFragmentListener;
+
     @Override
     public RecipeStepsAdapter.detailsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_steps_content, parent, false);
@@ -44,26 +46,11 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
         holder.mStepsView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Context context = v.getContext();
 
-                Bundle bundle = new Bundle();
+                mFragmentListener.onStepsVideoTwoPane(holder.mStepClass, mStep);
 
-                //TODO: here need to modified
-                Intent intent = new Intent(context, StepsDetailActivity.class);
+                //TODO: here need to modified, cannot start StepDetailActivity.class when twoPane
 
-                bundle.putString(StepsDetailFragment.STEP_DESCRIBE, holder.mStepClass.getDescription());
-
-                bundle.putInt(StepsDetailFragment.STEP_ID, holder.mStepClass.getId());
-
-                bundle.putString(StepsDetailFragment.STEP_URL, holder.mStepClass.getVideoURL());
-
-                bundle.putInt(StepsDetailFragment.STEPS_SIZE, mStep.size());
-
-                bundle.putParcelableArrayList(StepsDetailFragment.STEPS, (ArrayList<? extends Parcelable>) mStep);
-
-                intent.putExtras(bundle);
-
-                context.startActivity(intent);
             }
         });
     }
@@ -77,6 +64,14 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
 
     public int getStepSize() {
         return mStep.size();
+    }
+
+    public interface onStepsVideoFragment{
+        void onStepsVideoTwoPane(Step step, List<Step> steps);
+    }
+
+    public void setmFragmentListener(onStepsVideoFragment onStepsVideoFragment){
+        this.mFragmentListener = onStepsVideoFragment;
     }
 
     public class detailsViewHolder extends RecyclerView.ViewHolder {

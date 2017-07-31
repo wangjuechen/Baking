@@ -25,6 +25,8 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -63,6 +65,7 @@ public class StepsDetailFragment extends Fragment {
     private String mDetailedDescription;
     private int mStepId;
     private int mStepsSize;
+    private List<Step> mStepList;
     private Step mSteps;
 
     @BindView(R.id.video_player_view)
@@ -72,7 +75,7 @@ public class StepsDetailFragment extends Fragment {
     TextView mtvStepDescription;
 
     @BindView(R.id.btn_previous_step)
-    Button mBtnPreciousStep;
+    Button mBtnPreviousStep;
 
     @BindView(R.id.btn_next_step)
     Button mBtnNextStep;
@@ -115,19 +118,19 @@ public class StepsDetailFragment extends Fragment {
             public void onClick(View v) {
                 int newStepID = mStepId + 1;
                 if (newStepID < mStepsSize) {
-                    mListener.onFragmentInteraction(newStepID);
+                    mListener.onFragmentInteraction(newStepID, mStepList);
                 } else {
                     Toast.makeText(getContext(), getString(R.string.toast_nextBtn), Toast.LENGTH_SHORT);
                 }
             }
         });
 
-        mBtnPreciousStep.setOnClickListener(new View.OnClickListener() {
+        mBtnPreviousStep.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int newStepID = mStepId - 1;
                 if (newStepID >= 0) {
-                    mListener.onFragmentInteraction(newStepID);
+                    mListener.onFragmentInteraction(newStepID, mStepList);
                 } else {
                     Toast.makeText(getContext(), getString(R.string.toast_previousBtn), Toast.LENGTH_SHORT);
                 }
@@ -224,7 +227,11 @@ public class StepsDetailFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(int stepID);
+        void onFragmentInteraction(int stepID, List<Step> steps);
+    }
+
+    public void setStepList(List<Step> step){
+        mStepList = step;
     }
 
     public void setVideoUrl(String url) {

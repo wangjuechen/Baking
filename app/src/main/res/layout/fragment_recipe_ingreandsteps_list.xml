@@ -1,54 +1,47 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:fillViewport="true">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <TextView
+        android:id="@+id/tv_title_ingredient"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="@dimen/text_margin"
+        android:text="@string/ingredient_item_detailPage"
+        android:textSize="@dimen/Title_CardView_fontSize" />
+
+    <View
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="@dimen/divider_line"
+        android:background="@color/accent" />
 
-        <TextView
-            android:id="@+id/tv_title_ingredient"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_margin="@dimen/text_margin"
-            android:text="@string/ingredient_item_detailPage"
-            android:textSize="@dimen/Title_CardView_fontSize" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_item_ingredient"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:listitem="@layout/item_list_ingredient_content">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/divider_line"
-            android:background="@color/accent" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_item_ingredient"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:listitem="@layout/item_list_ingredient_content">
-
-        </android.support.v7.widget.RecyclerView>
+    </android.support.v7.widget.RecyclerView>
 
 
-        <TextView
-            android:id="@+id/tv_title_steps"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_margin="@dimen/text_margin"
-            android:text="@string/steps_item_detailPage"
-            android:textSize="@dimen/Title_CardView_fontSize" />
+    <TextView
+        android:id="@+id/tv_title_steps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="@dimen/text_margin"
+        android:text="@string/steps_item_detailPage"
+        android:textSize="@dimen/Title_CardView_fontSize" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_item_steps"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:listitem="@layout/item_list_steps_content" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_item_steps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:listitem="@layout/item_list_steps_content" />
 
-    </LinearLayout>
+</LinearLayout>
 
-</ScrollView>
 

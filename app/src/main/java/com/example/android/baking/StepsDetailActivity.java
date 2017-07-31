@@ -1,32 +1,29 @@
 package com.example.android.baking;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.example.android.baking.RecipeData.Step;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.android.baking.StepsDetailFragment.STEPS_SIZE;
 import static com.example.android.baking.StepsDetailFragment.STEP_DESCRIBE;
 import static com.example.android.baking.StepsDetailFragment.STEP_ID;
 import static com.example.android.baking.StepsDetailFragment.STEP_URL;
 
-public class StepsDetailActivity extends AppCompatActivity implements StepsDetailFragment.OnFragmentInteractionListener{
+public class StepsDetailActivity extends AppCompatActivity implements StepsDetailFragment.OnFragmentInteractionListener {
 
     private int mStepId;
     private String mDetailedDescription;
     private String mVideoUrl;
     private int mStepsSize;
     private List<Step> mSteps;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_stpes_list);
 
 
         if (savedInstanceState == null) {
@@ -50,21 +47,21 @@ public class StepsDetailActivity extends AppCompatActivity implements StepsDetai
 
             stepsDetailFragment.setArguments(arguments);
 
+            setContentView(R.layout.activity_stpes_list);
+
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.steps_fragment_container, stepsDetailFragment)
                     .commit();
         }
     }
 
-
-
-    public void onFragmentInteraction(int stepID) {
+    public void onFragmentInteraction(int stepID, List<Step> stepList) {
 
         StepsDetailFragment stepFragment = new StepsDetailFragment();
 
-        mVideoUrl = mSteps.get(stepID).getVideoURL();
-        mDetailedDescription = mSteps.get(stepID).getDescription();
-        mStepsSize = mSteps.size();
+        mVideoUrl = stepList.get(stepID).getVideoURL();
+        mDetailedDescription = stepList.get(stepID).getDescription();
+        mStepsSize = stepList.size();
 
         stepFragment.setStepId(stepID);
         stepFragment.setDetailedDescription(mDetailedDescription);
@@ -76,5 +73,4 @@ public class StepsDetailActivity extends AppCompatActivity implements StepsDetai
                 .commit();
 
     }
-
 }

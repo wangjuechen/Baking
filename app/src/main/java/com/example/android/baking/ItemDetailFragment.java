@@ -3,6 +3,7 @@ package com.example.android.baking;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +19,7 @@ import com.example.android.baking.RecipeData.Step;
 import com.example.android.baking.RecyclerViewAdapters.RecipeIngredientAdapter;
 import com.example.android.baking.RecyclerViewAdapters.RecipeStepsAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -29,7 +31,7 @@ import butterknife.ButterKnife;
  * in two-pane mode (on tablets) or a {@link ItemDetailActivity}
  * on handsets.
  */
-public class ItemDetailFragment extends Fragment {
+public class ItemDetailFragment extends Fragment implements RecipeStepsAdapter.onStepsVideoFragment {
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.
@@ -77,7 +79,6 @@ public class ItemDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         RecipeItem item;
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
@@ -122,6 +123,8 @@ public class ItemDetailFragment extends Fragment {
 
         mIngredientAdapter = new RecipeIngredientAdapter(mIngredient);
 
+        mStepsAdapter.setmFragmentListener(this);
+
         mStepsRecycleView.setAdapter(mStepsAdapter);
 
         mIngredientRecycleView.setAdapter(mIngredientAdapter);
@@ -129,4 +132,47 @@ public class ItemDetailFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onStepsVideoTwoPane(Step step, List<Step> steps) {
+
+            Bundle bundle = new Bundle();
+
+            Intent intent = new Intent(getContext(), StepsDetailActivity.class);
+
+            bundle.putString(StepsDetailFragment.STEP_DESCRIBE, step.getDescription());
+
+            bundle.putInt(StepsDetailFragment.STEP_ID, step.getId());
+
+            bundle.putString(StepsDetailFragment.STEP_URL, step.getVideoURL());
+
+            bundle.putInt(StepsDetailFragment.STEPS_SIZE, steps.size());
+
+            bundle.putParcelableArrayList(StepsDetailFragment.STEPS, (ArrayList<? extends Parcelable>) steps);
+
+            intent.putExtras(bundle);
+
+        if (getActivity().findViewById(R.id.tablet_linear_layout) == null) {
+
+            startActivity(intent);
+
+        } else {
+
+            StepsDetailFragment stepFragment = new StepsDetailFragment();
+
+            String mVideoUrl = steps.get(step.getId()).getVideoURL();
+            String mDetailedDescription = steps.get(step.getId()).getDescription();
+            int mStepsSize = steps.size();
+
+            stepFragment.setStepList(steps);
+            stepFragment.setStepId(step.getId());
+            stepFragment.setDetailedDescription(mDetailedDescription);
+            stepFragment.setVideoUrl(mVideoUrl);
+            stepFragment.setStepsSize(mStepsSize);
+
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.steps_fragment_container, stepFragment)
+                    .commit();
+        }
+
+    }
 }
