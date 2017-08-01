@@ -84,7 +84,7 @@ public class ItemDetailActivity extends AppCompatActivity implements StepsDetail
 
             StepsDetailFragment stepsDetailFragment = new StepsDetailFragment();
 
-            mItem = (RecipeItem) getIntent().getSerializableExtra(ItemDetailFragment.ARG_ITEM_ID);
+            mItem = (RecipeItem) getIntent().getExtras().getSerializable(ItemDetailFragment.ARG_ITEM_ID);
 
             Step step = mItem.getSteps().get(0);
 
@@ -144,15 +144,15 @@ public class ItemDetailActivity extends AppCompatActivity implements StepsDetail
                 .commit();
     }
     //TODO need modified, need RecipeItem as argument sent in here
-    @Override
-    public void onStepsVideoTwoPane(Step step, List<Step> steps) {
+
+    public void onStepsVideoTwoPane(Step step, List<Step> stepList , RecipeItem items) {
 
         if (!mTwoPane) {
             Bundle bundle = new Bundle();
 
             Intent intent = new Intent(this, StepsDetailActivity.class);
 
-            bundle.putSerializable("ITEM", mItem);
+            bundle.putSerializable(ItemDetailFragment.ARG_ITEM_ID, items);
 
             bundle.putString(StepsDetailFragment.STEP_DESCRIBE, step.getDescription());
 
@@ -160,9 +160,9 @@ public class ItemDetailActivity extends AppCompatActivity implements StepsDetail
 
             bundle.putString(StepsDetailFragment.STEP_URL, step.getVideoURL());
 
-            bundle.putInt(StepsDetailFragment.STEPS_SIZE, steps.size());
+            bundle.putInt(StepsDetailFragment.STEPS_SIZE, stepList.size());
 
-            bundle.putParcelableArrayList(StepsDetailFragment.STEPS, (ArrayList<? extends Parcelable>) steps);
+            bundle.putParcelableArrayList(StepsDetailFragment.STEPS, (ArrayList<? extends Parcelable>) stepList);
 
             intent.putExtras(bundle);
 
@@ -172,11 +172,11 @@ public class ItemDetailActivity extends AppCompatActivity implements StepsDetail
 
             StepsDetailFragment stepFragment = new StepsDetailFragment();
 
-            mVideoUrl = steps.get(step.getId()).getVideoURL();
-            mDetailedDescription = steps.get(step.getId()).getDescription();
-            mStepsSize = steps.size();
+            mVideoUrl = stepList.get(step.getId()).getVideoURL();
+            mDetailedDescription = stepList.get(step.getId()).getDescription();
+            mStepsSize = stepList.size();
 
-            stepFragment.setItem(mItem);
+            stepFragment.setItem(items);
             stepFragment.setStepId(step.getId());
             stepFragment.setDetailedDescription(mDetailedDescription);
             stepFragment.setVideoUrl(mVideoUrl);

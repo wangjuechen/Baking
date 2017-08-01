@@ -33,12 +33,14 @@ public class StepsDetailActivity extends AppCompatActivity implements StepsDetai
         if (savedInstanceState == null) {
             StepsDetailFragment stepsDetailFragment = new StepsDetailFragment();
 
-            mItem = (RecipeItem) getIntent().getSerializableExtra("ITEM");
-            mSteps = getIntent().getParcelableArrayListExtra(StepsDetailFragment.STEPS);
+            Bundle bundle = getIntent().getExtras();
 
-            mVideoUrl = getIntent().getStringExtra(STEP_URL);
-            mDetailedDescription = getIntent().getStringExtra(STEP_DESCRIBE);
-            mStepId = getIntent().getIntExtra(STEP_ID, 0);
+            mItem = (RecipeItem) bundle.getSerializable(ItemDetailFragment.ARG_ITEM_ID);
+            mSteps = bundle.getParcelableArrayList(StepsDetailFragment.STEPS);
+
+            mVideoUrl = bundle.getString(STEP_URL);
+            mDetailedDescription = bundle.getString(STEP_DESCRIBE);
+            mStepId = bundle.getInt(STEP_ID, 0);
             mStepsSize = mSteps.size();
 
             stepsDetailFragment.setItem(mItem);
@@ -60,11 +62,16 @@ public class StepsDetailActivity extends AppCompatActivity implements StepsDetai
                     .add(R.id.steps_fragment_container, stepsDetailFragment)
                     .commit();
         }else{
-            Bundle bundle = new Bundle();
 
-            bundle.putSerializable(ItemDetailFragment.ARG_ITEM_ID, savedInstanceState.getSerializable(ItemDetailFragment.ARG_ITEM_ID));
-            bundle.putParcelableArrayList(STEP_ID, savedInstanceState.getParcelableArrayList(STEP_ID));
-            bundle.putInt("ID", savedInstanceState.getInt("ID"));
+            Bundle bundle = new Bundle();
+            //TODO something wrong, item value is null, cant pass to here
+            RecipeItem item = (RecipeItem) savedInstanceState.getSerializable(ItemDetailFragment.ARG_ITEM_ID);
+            List<Step> step = savedInstanceState.getParcelableArrayList(STEP_ID);
+            int id = savedInstanceState.getInt("ID");
+
+            bundle.putSerializable(ItemDetailFragment.ARG_ITEM_ID, item);
+            bundle.putParcelableArrayList(STEP_ID, (ArrayList<? extends Parcelable>) step);
+            bundle.putInt("ID",id);
 
             Intent intent =  new Intent(this, ItemDetailActivity.class);
 
@@ -82,7 +89,6 @@ public class StepsDetailActivity extends AppCompatActivity implements StepsDetai
         mDetailedDescription = stepList.get(stepID).getDescription();
         mStepsSize = stepList.size();
 
-        stepFragment.setItem(mItem);
         stepFragment.setStepList(stepList);
         stepFragment.setStepId(stepID);
         stepFragment.setDetailedDescription(mDetailedDescription);

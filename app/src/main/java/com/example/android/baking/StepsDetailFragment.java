@@ -224,7 +224,7 @@ public class StepsDetailFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("ITEM", mItem);
+        outState.putSerializable(ItemDetailFragment.ARG_ITEM_ID, mItem);
         outState.putParcelableArrayList(STEP_ID, (ArrayList<? extends Parcelable>) mStepList);
         outState.putInt("ID", mStepId);
 

@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.example.android.baking.R;
 import com.example.android.baking.RecipeData.Ingredient;
+import com.example.android.baking.RecipeData.RecipeItem;
 
 import java.util.List;
 
@@ -17,9 +18,11 @@ public class RecipeIngredientAdapter extends RecyclerView.Adapter<RecipeIngredie
 
     private List<Ingredient> mIngredient;
     private Context mContext;
+    private RecipeItem mItem;
 
-    public RecipeIngredientAdapter(List<Ingredient> ingredients){
+    public RecipeIngredientAdapter(List<Ingredient> ingredients , RecipeItem item){
         mIngredient = ingredients;
+        mItem = item;
     }
 
     @Override
@@ -31,7 +34,7 @@ public class RecipeIngredientAdapter extends RecyclerView.Adapter<RecipeIngredie
 
     @Override
     public void onBindViewHolder(ingredientViewHolder holder, int position) {
-        holder.mIngredientClass = mIngredient.get(position);
+        holder.mIngredientClass = mItem.getIngredients().get(position);
 
         double quantity = holder.mIngredientClass.getQuantity();
         String measure = holder.mIngredientClass.getMeasure();

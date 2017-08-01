@@ -79,14 +79,16 @@ public class ItemDetailFragment extends Fragment implements RecipeStepsAdapter.o
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        RecipeItem item;
+        RecipeItem item = null;
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
+
+            Bundle bundle = getActivity().getIntent().getExtras();
 
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
-            item = (RecipeItem) getActivity().getIntent().getSerializableExtra(ARG_ITEM_ID);
+            item = (RecipeItem) bundle.getSerializable(ARG_ITEM_ID);
 
             mSteps = item.getSteps();
 
@@ -119,9 +121,9 @@ public class ItemDetailFragment extends Fragment implements RecipeStepsAdapter.o
 
         mIngredientRecycleView.setLayoutManager(mIngredientLinearLayoutManager);
 
-        mStepsAdapter = new RecipeStepsAdapter(mSteps);
+        mStepsAdapter = new RecipeStepsAdapter(mSteps,item);
 
-        mIngredientAdapter = new RecipeIngredientAdapter(mIngredient);
+        mIngredientAdapter = new RecipeIngredientAdapter(mIngredient,item);
 
         mStepsAdapter.setmFragmentListener(this);
 
@@ -133,11 +135,14 @@ public class ItemDetailFragment extends Fragment implements RecipeStepsAdapter.o
     }
 
     @Override
-    public void onStepsVideoTwoPane(Step step, List<Step> steps) {
+    public void onStepsVideoTwoPane(Step step, List<Step> steps , RecipeItem item) {
 
             Bundle bundle = new Bundle();
 
             Intent intent = new Intent(getContext(), StepsDetailActivity.class);
+
+            //TODO something is wrong here, item value cant pass to StepsDetailActivity.class
+            bundle.putSerializable(ItemDetailFragment.ARG_ITEM_ID, item);
 
             bundle.putString(StepsDetailFragment.STEP_DESCRIBE, step.getDescription());
 
@@ -163,6 +168,7 @@ public class ItemDetailFragment extends Fragment implements RecipeStepsAdapter.o
             String mDetailedDescription = steps.get(step.getId()).getDescription();
             int mStepsSize = steps.size();
 
+            stepFragment.setItem(item);
             stepFragment.setStepList(steps);
             stepFragment.setStepId(step.getId());
             stepFragment.setDetailedDescription(mDetailedDescription);

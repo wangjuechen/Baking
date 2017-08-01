@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.baking.R;
+import com.example.android.baking.RecipeData.RecipeItem;
 import com.example.android.baking.RecipeData.Step;
 import com.example.android.baking.StepsDetailActivity;
 import com.example.android.baking.StepsDetailFragment;
@@ -22,10 +23,12 @@ import java.util.List;
 
 public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.detailsViewHolder> {
 
-    private List<Step> mStep;
+    private List<Step> mStepList;
+    private RecipeItem mItem;
 
-    public RecipeStepsAdapter(List<Step> steps) {
-        mStep = steps;
+    public RecipeStepsAdapter(List<Step> steps, RecipeItem items) {
+        mStepList = steps;
+        mItem = items;
     }
 
     onStepsVideoFragment mFragmentListener;
@@ -39,15 +42,15 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
 
     @Override
     public void onBindViewHolder(final detailsViewHolder holder, final int position) {
-        holder.mStepClass = mStep.get(position);
-        holder.mShortDescripeView.setText(mStep.get(position).getShortDescription());
+        holder.mStepClass = mStepList.get(position);
+        holder.mShortDescripeView.setText(mStepList.get(position).getShortDescription());
 
 
         holder.mStepsView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                mFragmentListener.onStepsVideoTwoPane(holder.mStepClass, mStep);
+                mFragmentListener.onStepsVideoTwoPane(holder.mStepClass, mStepList, mItem);
 
             }
         });
@@ -56,16 +59,16 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
 
     @Override
     public int getItemCount() {
-        int itemCount = (mStep == null ? 0 : mStep.size());
+        int itemCount = (mStepList == null ? 0 : mStepList.size());
         return itemCount;
     }
 
     public int getStepSize() {
-        return mStep.size();
+        return mStepList.size();
     }
 
     public interface onStepsVideoFragment{
-        void onStepsVideoTwoPane(Step step, List<Step> steps);
+        void onStepsVideoTwoPane(Step step, List<Step> steps , RecipeItem items);
     }
 
     public void setmFragmentListener(onStepsVideoFragment onStepsVideoFragment){

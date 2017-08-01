@@ -23,4 +23,8 @@
 
     <string name="toast_previousBtn">No previous step</string>
 
+    <string name="appwidget_text">Widget displays ingredients of recipe</string>
+
+    <string name="add_widget">Add widget</string>
+
 </resources>
