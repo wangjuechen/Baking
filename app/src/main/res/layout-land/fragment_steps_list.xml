@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.android.baking.StepsDetailFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+            android:id="@+id/video_player_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2">
+
+        </com.google.android.exoplayer2.ui.SimpleExoPlayerView>
+
+        <TextView
+            android:id="@+id/tv_step_description"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="@dimen/text_margin"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:padding="@dimen/text_padding"
+            android:textSize="@dimen/tv_stepDetailedDescription_fontSize"
+            tools:text="3. Press the cookie crumb mixture into the prepared pie pan and bake for 12 minutes. Let crust cool to room temperature." />
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/btn_step_height">
+
+            <Button
+                android:id="@+id/btn_previous_step"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_margin="@dimen/text_margin"
+                android:text="222" />
+
+            <Button
+                android:id="@+id/btn_next_step"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_margin="@dimen/text_margin"
+                android:text="333" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

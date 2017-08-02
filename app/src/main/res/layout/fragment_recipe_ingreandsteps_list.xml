@@ -13,10 +13,7 @@
         android:text="@string/ingredient_item_detailPage"
         android:textSize="@dimen/Title_CardView_fontSize" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/divider_line"
-        android:background="@color/accent" />
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_item_ingredient"
@@ -26,6 +23,11 @@
 
     </android.support.v7.widget.RecyclerView>
 
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_line"
+        android:background="@color/secondary_text" />
 
     <TextView
         android:id="@+id/tv_title_steps"

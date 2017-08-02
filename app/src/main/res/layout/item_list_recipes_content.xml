@@ -8,7 +8,7 @@
     android:layout_margin="@dimen/mainActivity_Card_margin"
     app:cardBackgroundColor="@color/primary"
     app:cardCornerRadius="@dimen/mainActivity_Card_radious"
-    card:cardElevation="@dimen/mainActivity_Card_elevation"
+    android:elevation="@dimen/mainActivity_Card_elevation"
     card:cardUseCompatPadding="true">
 
 

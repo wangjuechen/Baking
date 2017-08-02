@@ -12,6 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="500"
+        android:textSize="@dimen/Content_CardView_fontSize"
         />
 
     <TextView
@@ -19,6 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text=" G"
+        android:textSize="@dimen/Content_CardView_fontSize"
         />
 
     <TextView
@@ -26,6 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text=" Graham Cracker crumbs"
+        android:textSize="@dimen/Content_CardView_fontSize"
         />
 
 </LinearLayout>

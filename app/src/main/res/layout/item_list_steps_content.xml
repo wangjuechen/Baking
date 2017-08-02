@@ -19,6 +19,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/divider_line"
-        android:background="@color/accent"/>
+        android:background="@color/secondary_text"/>
 
 </LinearLayout>
