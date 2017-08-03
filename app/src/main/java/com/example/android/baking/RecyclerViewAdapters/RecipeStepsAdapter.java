@@ -2,33 +2,30 @@ package com.example.android.baking.RecyclerViewAdapters;
 
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.baking.R;
 import com.example.android.baking.RecipeData.RecipeItem;
 import com.example.android.baking.RecipeData.Step;
-import com.example.android.baking.StepsDetailActivity;
-import com.example.android.baking.StepsDetailFragment;
+import com.squareup.picasso.Picasso;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.detailsViewHolder> {
 
+    private Context mContext;
     private List<Step> mStepList;
     private RecipeItem mItem;
 
-    public RecipeStepsAdapter(List<Step> steps, RecipeItem items) {
+    public RecipeStepsAdapter(List<Step> steps, RecipeItem items, Context context) {
         mStepList = steps;
         mItem = items;
+        mContext = context;
     }
 
     onStepsVideoFragment mFragmentListener;
@@ -43,8 +40,14 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
     @Override
     public void onBindViewHolder(final detailsViewHolder holder, final int position) {
         holder.mStepClass = mStepList.get(position);
+
         holder.mShortDescripeView.setText(mStepList.get(position).getShortDescription());
 
+        holder.mThumbnailUrl = mStepList.get(position).getThumbnailURL();
+
+        if (holder.mThumbnailUrl.length() > 0 && holder.mThumbnailUrl != null) {
+            Picasso.with(mContext).load(holder.mThumbnailUrl).into(holder.mImageView);
+        }
 
         holder.mStepsView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,23 +70,26 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
         return mStepList.size();
     }
 
-    public interface onStepsVideoFragment{
-        void onStepsVideoTwoPane(Step step, List<Step> steps , RecipeItem items);
+    public interface onStepsVideoFragment {
+        void onStepsVideoTwoPane(Step step, List<Step> steps, RecipeItem items);
     }
 
-    public void setmFragmentListener(onStepsVideoFragment onStepsVideoFragment){
+    public void setmFragmentListener(onStepsVideoFragment onStepsVideoFragment) {
         this.mFragmentListener = onStepsVideoFragment;
     }
 
     public class detailsViewHolder extends RecyclerView.ViewHolder {
         final View mStepsView;
         final TextView mShortDescripeView;
+        final ImageView mImageView;
+        String mThumbnailUrl;
         Step mStepClass;
 
         public detailsViewHolder(View itemView) {
             super(itemView);
             mStepsView = itemView;
             mShortDescripeView = (TextView) itemView.findViewById(R.id.tv_step_shortDescription);
+            mImageView = (ImageView) itemView.findViewById(R.id.iv_step_thumbnail);
         }
 
         @Override

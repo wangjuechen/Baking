@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.baking.RecipeData.Ingredient;
@@ -18,6 +20,7 @@ import com.example.android.baking.RecipeData.RecipeItem;
 import com.example.android.baking.RecipeData.Step;
 import com.example.android.baking.RecyclerViewAdapters.RecipeIngredientAdapter;
 import com.example.android.baking.RecyclerViewAdapters.RecipeStepsAdapter;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +53,7 @@ public class ItemDetailFragment extends Fragment implements RecipeStepsAdapter.o
 
     private final LinearLayoutManager mIngredientLinearLayoutManager = new LinearLayoutManager(getActivity());
 
-
+    private static final String BUNDLE_RECYCLER_LAYOUT = "Recycler_layout";
     /**
      * The dummy content this fragment is presenting.
      */
@@ -61,6 +64,7 @@ public class ItemDetailFragment extends Fragment implements RecipeStepsAdapter.o
 
     @BindView(R.id.tv_title_ingredient)
     TextView mTvIngredientContent;
+
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -73,7 +77,24 @@ public class ItemDetailFragment extends Fragment implements RecipeStepsAdapter.o
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setRetainInstance(true);
 
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if(savedInstanceState != null)
+        {
+            Parcelable savedRecyclerLayoutState = savedInstanceState.getParcelable(BUNDLE_RECYCLER_LAYOUT);
+            mStepsRecycleView.getLayoutManager().onRestoreInstanceState(savedRecyclerLayoutState);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(BUNDLE_RECYCLER_LAYOUT, mStepsRecycleView.getLayoutManager().onSaveInstanceState());
     }
 
     @Override
@@ -121,7 +142,7 @@ public class ItemDetailFragment extends Fragment implements RecipeStepsAdapter.o
 
         mIngredientRecycleView.setLayoutManager(mIngredientLinearLayoutManager);
 
-        mStepsAdapter = new RecipeStepsAdapter(mSteps,item);
+        mStepsAdapter = new RecipeStepsAdapter(mSteps,item, getActivity());
 
         mIngredientAdapter = new RecipeIngredientAdapter(mIngredient,item);
 
@@ -130,6 +151,7 @@ public class ItemDetailFragment extends Fragment implements RecipeStepsAdapter.o
         mStepsRecycleView.setAdapter(mStepsAdapter);
 
         mIngredientRecycleView.setAdapter(mIngredientAdapter);
+
 
         return rootView;
     }
@@ -141,7 +163,6 @@ public class ItemDetailFragment extends Fragment implements RecipeStepsAdapter.o
 
             Intent intent = new Intent(getContext(), StepsDetailActivity.class);
 
-            //TODO something is wrong here, item value cant pass to StepsDetailActivity.class
             bundle.putSerializable(ItemDetailFragment.ARG_ITEM_ID, item);
 
             bundle.putString(StepsDetailFragment.STEP_DESCRIBE, step.getDescription());

@@ -15,6 +15,7 @@ import java.util.List;
 
 import static com.example.android.baking.StepsDetailFragment.STEP_DESCRIBE;
 import static com.example.android.baking.StepsDetailFragment.STEP_ID;
+import static com.example.android.baking.StepsDetailFragment.STEP_THUMBNAILURL;
 import static com.example.android.baking.StepsDetailFragment.STEP_URL;
 
 public class StepsDetailActivity extends AppCompatActivity implements StepsDetailFragment.OnFragmentInteractionListener {
@@ -22,9 +23,10 @@ public class StepsDetailActivity extends AppCompatActivity implements StepsDetai
     private int mStepId;
     private String mDetailedDescription;
     private String mVideoUrl;
+    private String mThumbnailUrl;
     private int mStepsSize;
-    private List<Step> mSteps;
-    private RecipeItem mItem;
+    private List<Step> mStepList;
+    private RecipeItem mRecipeItem;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,20 +37,23 @@ public class StepsDetailActivity extends AppCompatActivity implements StepsDetai
 
             Bundle bundle = getIntent().getExtras();
 
-            mItem = (RecipeItem) bundle.getSerializable(ItemDetailFragment.ARG_ITEM_ID);
-            mSteps = bundle.getParcelableArrayList(StepsDetailFragment.STEPS);
+            mRecipeItem = (RecipeItem) bundle.getSerializable(ItemDetailFragment.ARG_ITEM_ID);
+            mStepList = bundle.getParcelableArrayList(StepsDetailFragment.STEPS);
 
             mVideoUrl = bundle.getString(STEP_URL);
             mDetailedDescription = bundle.getString(STEP_DESCRIBE);
             mStepId = bundle.getInt(STEP_ID, 0);
-            mStepsSize = mSteps.size();
+            mStepsSize = mStepList.size();
+            mThumbnailUrl = bundle.getString(STEP_THUMBNAILURL);
 
-            stepsDetailFragment.setItem(mItem);
-            stepsDetailFragment.setStepList(mSteps);
+            stepsDetailFragment.setItem(mRecipeItem);
+            stepsDetailFragment.setStepList(mStepList);
             stepsDetailFragment.setStepId(mStepId);
             stepsDetailFragment.setDetailedDescription(mDetailedDescription);
             stepsDetailFragment.setVideoUrl(mVideoUrl);
             stepsDetailFragment.setStepsSize(mStepsSize);
+            stepsDetailFragment.setThumbnailUrl(mThumbnailUrl);
+
 
             Bundle arguments = new Bundle();
             arguments.putString(STEP_ID,
@@ -81,6 +86,22 @@ public class StepsDetailActivity extends AppCompatActivity implements StepsDetai
         }
     }
 
+    /*@Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        SimpleExoPlayerView player = (SimpleExoPlayerView) findViewById(R.id.video_player_view);
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int width = metrics.widthPixels;
+        int height = metrics.heightPixels;
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
+
+        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
+            player.setLayoutParams(layoutParams);
+        }
+    }*/
+
     public void onFragmentInteraction(int stepID, List<Step> stepList) {
 
         StepsDetailFragment stepFragment = new StepsDetailFragment();
@@ -94,6 +115,7 @@ public class StepsDetailActivity extends AppCompatActivity implements StepsDetai
         stepFragment.setDetailedDescription(mDetailedDescription);
         stepFragment.setVideoUrl(mVideoUrl);
         stepFragment.setStepsSize(mStepsSize);
+        stepFragment.setThumbnailUrl(mThumbnailUrl);
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.steps_fragment_container, stepFragment)

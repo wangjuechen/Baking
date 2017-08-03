@@ -1,16 +1,18 @@
 package com.example.android.baking;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.android.baking.RecipeData.RecipeItem;
 import com.example.android.baking.RecipeData.Step;
@@ -54,6 +56,8 @@ public class StepsDetailFragment extends Fragment {
 
     public static final String STEPS = "steps";
 
+    public static final String STEP_THUMBNAILURL = "step_thumbnail";
+
     private SimpleExoPlayer mExoPlayer;
 
     private RecipeStepsAdapter mStepAdapter;
@@ -65,12 +69,13 @@ public class StepsDetailFragment extends Fragment {
     private int currentWindow;
     private long playbackPosition;
     private String mVideoUrl;
+    private String mThumbUrl;
     private String mDetailedDescription;
     private int mStepId;
     private int mStepsSize;
     private List<Step> mStepList;
-    private Step mSteps;
-    private RecipeItem mItem;
+
+    private RecipeItem mRecipeItem;
 
     @BindView(R.id.video_player_view)
     SimpleExoPlayerView mPlayerView;
@@ -83,6 +88,9 @@ public class StepsDetailFragment extends Fragment {
 
     @BindView(R.id.btn_next_step)
     Button mBtnNextStep;
+
+    @BindView(R.id.step_vedioLayout)
+    FrameLayout mFrameLayout;
 
     public StepsDetailFragment() {
         // Required empty public constructor
@@ -105,6 +113,8 @@ public class StepsDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setRetainInstance(true);
+
     }
 
     @Override
@@ -113,7 +123,7 @@ public class StepsDetailFragment extends Fragment {
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(STEP_ID)) {
 
-                mItem = (RecipeItem ) savedInstanceState.getSerializable(ItemDetailFragment.ARG_ITEM_ID);
+                mRecipeItem = (RecipeItem) savedInstanceState.getSerializable(ItemDetailFragment.ARG_ITEM_ID);
 
                 mStepList = savedInstanceState.getParcelableArrayList(STEP_ID);
 
@@ -123,6 +133,8 @@ public class StepsDetailFragment extends Fragment {
 
                 mVideoUrl = mStepList.get(mStepId).getVideoURL();
 
+                mThumbUrl = mStepList.get(mStepId).getThumbnailURL();
+
             }
         }
         View view = inflater.inflate(R.layout.fragment_steps_list, container, false);
@@ -131,15 +143,12 @@ public class StepsDetailFragment extends Fragment {
 
         mtvStepDescription.setText(mDetailedDescription);
 
+
         mBtnNextStep.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int newStepID = mStepId + 1;
-                if (newStepID < mStepsSize) {
-                    mListener.onFragmentInteraction(newStepID, mStepList);
-                } else {
-                    Toast.makeText(getContext(), getString(R.string.toast_nextBtn), Toast.LENGTH_SHORT);
-                }
+                showStepsSnackBar(newStepID, mStepList.size());
             }
         });
 
@@ -147,11 +156,7 @@ public class StepsDetailFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 int newStepID = mStepId - 1;
-                if (newStepID >= 0) {
-                    mListener.onFragmentInteraction(newStepID, mStepList);
-                } else {
-                    Toast.makeText(getContext(), getString(R.string.toast_previousBtn), Toast.LENGTH_SHORT);
-                }
+                showStepsSnackBar(newStepID, mStepList.size());
             }
         });
 
@@ -160,6 +165,31 @@ public class StepsDetailFragment extends Fragment {
         }
 
         return view;
+    }
+
+    private void showStepsSnackBar(int newStepID, int stepSize) {
+
+        String message;
+
+        int color = Color.RED;
+
+        if (newStepID < stepSize && newStepID >= 0) {
+            mListener.onFragmentInteraction(newStepID, mStepList);
+
+        } else if (newStepID >= stepSize) {
+            message = getString(R.string.toast_nextBtn);
+            Snackbar snackbar = Snackbar.make(mFrameLayout, message, Snackbar.LENGTH_LONG);
+            snackbar.setActionTextColor(color);
+
+            snackbar.show();
+
+        } else if (newStepID < 0) {
+            message = getString(R.string.toast_previousBtn);
+            Snackbar snackbar = Snackbar.make(mFrameLayout, message, Snackbar.LENGTH_LONG);
+            snackbar.setActionTextColor(color);
+            snackbar.show();
+        }
+
     }
 
     @Override
@@ -179,10 +209,13 @@ public class StepsDetailFragment extends Fragment {
         mPlayerView.setPlayer(mExoPlayer);
 
         mExoPlayer.setPlayWhenReady(mPlayWhenReady);
+
         mExoPlayer.seekTo(currentWindow, playbackPosition);
 
         Uri uri = Uri.parse(mVideoUrl);
+
         MediaSource mediaSource = buildMediaSource(uri);
+
         mExoPlayer.prepare(mediaSource, true, false);
         //mExoPlayer.setPlayWhenReady(true);
     }
@@ -224,7 +257,7 @@ public class StepsDetailFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(ItemDetailFragment.ARG_ITEM_ID, mItem);
+        outState.putSerializable(ItemDetailFragment.ARG_ITEM_ID, mRecipeItem);
         outState.putParcelableArrayList(STEP_ID, (ArrayList<? extends Parcelable>) mStepList);
         outState.putInt("ID", mStepId);
 
@@ -256,7 +289,7 @@ public class StepsDetailFragment extends Fragment {
     }
 
     public void setItem(RecipeItem item) {
-        mItem = item;
+        mRecipeItem = item;
     }
 
     public void setStepList(List<Step> step) {
@@ -277,5 +310,9 @@ public class StepsDetailFragment extends Fragment {
 
     public void setStepsSize(int size) {
         mStepsSize = size;
+    }
+
+    public void setThumbnailUrl(String url) {
+        mThumbUrl = url;
     }
 }

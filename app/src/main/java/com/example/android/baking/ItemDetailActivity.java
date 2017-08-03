@@ -1,6 +1,9 @@
 package com.example.android.baking;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.NavUtils;
@@ -41,7 +44,7 @@ public class ItemDetailActivity extends AppCompatActivity implements StepsDetail
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_detail);
 
-        if (findViewById(R.id.tablet_linear_layout) != null) {
+        if (isTablet(this)) {
             mTwoPane = true;
         }
 
@@ -108,6 +111,12 @@ public class ItemDetailActivity extends AppCompatActivity implements StepsDetail
         }
     }
 
+    private boolean isTablet(Context context) {
+        return (context.getResources().getConfiguration().screenLayout
+                & Configuration.SCREENLAYOUT_SIZE_MASK)
+                >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -159,6 +168,8 @@ public class ItemDetailActivity extends AppCompatActivity implements StepsDetail
             bundle.putInt(StepsDetailFragment.STEP_ID, step.getId());
 
             bundle.putString(StepsDetailFragment.STEP_URL, step.getVideoURL());
+
+            bundle.putSerializable(StepsDetailFragment.STEP_THUMBNAILURL, step.getThumbnailURL());
 
             bundle.putInt(StepsDetailFragment.STEPS_SIZE, stepList.size());
 

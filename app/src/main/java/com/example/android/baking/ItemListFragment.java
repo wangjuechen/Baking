@@ -1,16 +1,18 @@
 package com.example.android.baking;
 
-import android.net.Uri;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -19,9 +21,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.android.baking.RecipeData.Ingredient;
+import com.example.android.baking.NetworkUtils.ConnectivityReceiver;
+import com.example.android.baking.NetworkUtils.InternetConnectivityStarter;
 import com.example.android.baking.RecipeData.RecipeItem;
-import com.example.android.baking.RecipeData.Step;
 import com.example.android.baking.RecyclerViewAdapters.RecipeListAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -30,7 +32,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 
 /**
@@ -40,9 +41,11 @@ import butterknife.ButterKnife;
  * Use the {@link ItemListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ItemListFragment extends Fragment {
+public class ItemListFragment extends Fragment implements ConnectivityReceiver.ConnectivityReceiverListener {
 
     private String JSON_RECEIPT_URL = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
+
+    private static final String BUNDLE_LIST_RECYCLER_LAYOUT = "Recycler_layout";
 
     private RequestQueue mRequestQueue;
 
@@ -57,6 +60,9 @@ public class ItemListFragment extends Fragment {
     private List<RecipeItem> mRecipeItems;
 
     private boolean mTabletDisplay;
+
+    @BindView(R.id.list_fragmentLayout)
+    RelativeLayout mLayout;
 
     public ItemListFragment() {
         // Required empty public constructor
@@ -88,22 +94,41 @@ public class ItemListFragment extends Fragment {
         mRecycleView = (RecyclerView) rootView.findViewById(R.id.rv_receipt_list);
         mRecycleView.setHasFixedSize(true);
 
-        if(mTabletDisplay){
+        if (mTabletDisplay) {
             int numOfCol = 3;
             mRecycleView.setLayoutManager(new GridLayoutManager(getActivity(), numOfCol));
 
-        }else{
+        } else {
             mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             mRecycleView.setLayoutManager(mLayoutManager);
         }
 
-        mRequestQueue = Volley.newRequestQueue(getActivity());
-        GsonBuilder gsonbuilder = new GsonBuilder();
-        gsonbuilder.setDateFormat("M/d/yy hh:mm a");
-        gson = gsonbuilder.create();
-        fetchPosts();
+        if (checkConnectivity()) {
+
+            mRequestQueue = Volley.newRequestQueue(getActivity());
+            GsonBuilder gsonbuilder = new GsonBuilder();
+            gsonbuilder.setDateFormat("M/d/yy hh:mm a");
+            gson = gsonbuilder.create();
+            fetchPosts();
+        }
 
         return rootView;
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if(savedInstanceState != null)
+        {
+            Parcelable savedRecyclerLayoutState = savedInstanceState.getParcelable(BUNDLE_LIST_RECYCLER_LAYOUT);
+            mRecycleView.getLayoutManager().onRestoreInstanceState(savedRecyclerLayoutState);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(BUNDLE_LIST_RECYCLER_LAYOUT, mRecycleView.getLayoutManager().onSaveInstanceState());
     }
 
     private void fetchPosts() {
@@ -111,6 +136,32 @@ public class ItemListFragment extends Fragment {
 
         mRequestQueue.add(request);
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        InternetConnectivityStarter.getInstance().setConnectivityListener(this);
+    }
+
+    private boolean checkConnectivity() {
+        boolean isConnected = ConnectivityReceiver.isConnected();
+        showSnack(isConnected);
+        return isConnected;
+    }
+
+    private void showSnack(boolean isConnected) {
+        if (!isConnected) {
+            String message = getString(R.string.SnackBar_noInternet);
+            Snackbar snackbar = Snackbar
+                    .make(mLayout, message, Snackbar.LENGTH_LONG);
+
+            View sbView = snackbar.getView();
+            TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+            textView.setTextColor(Color.RED);
+            snackbar.show();
+        }
     }
 
     private final Response.Listener<String> onPostsLoaded = new Response.Listener<String>() {
@@ -128,8 +179,12 @@ public class ItemListFragment extends Fragment {
     private final Response.ErrorListener onPostsError = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.e("ItemListFragment", error.toString());
+            showSnack(false);
         }
     };
 
+    @Override
+    public void onNetworkConnectingChanged(boolean connected) {
+        showSnack(connected);
+    }
 }
