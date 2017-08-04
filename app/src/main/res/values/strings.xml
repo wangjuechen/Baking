@@ -29,4 +29,6 @@
 
     <string name="SnackBar_noInternet">"Sorry! Not connected to internet"</string>
 
+    <string name="widget_empty_textView">Click to start Baking</string>
+
 </resources>

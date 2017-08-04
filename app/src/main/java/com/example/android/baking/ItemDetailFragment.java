@@ -1,7 +1,9 @@
 package com.example.android.baking;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -12,7 +14,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.baking.RecipeData.Ingredient;
@@ -20,7 +21,7 @@ import com.example.android.baking.RecipeData.RecipeItem;
 import com.example.android.baking.RecipeData.Step;
 import com.example.android.baking.RecyclerViewAdapters.RecipeIngredientAdapter;
 import com.example.android.baking.RecyclerViewAdapters.RecipeStepsAdapter;
-import com.squareup.picasso.Picasso;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +42,10 @@ public class ItemDetailFragment extends Fragment implements RecipeStepsAdapter.o
      */
     public static final String ARG_ITEM_ID = "item_id";
 
+    public static final String ARG_WIDGET_INGREDIENT_EDITOR = "ingredient_pref_editor";
+
+    public static final String ARG_WIDGET_INGREDIENT = "ingredient_pref";
+
     private RecyclerView mStepsRecycleView;
 
     private RecyclerView mIngredientRecycleView;
@@ -58,9 +63,9 @@ public class ItemDetailFragment extends Fragment implements RecipeStepsAdapter.o
      * The dummy content this fragment is presenting.
      */
 
-    private List<Ingredient> mIngredient;
+    private List<Ingredient> mIngredientList;
 
-    private List<Step> mSteps;
+    private List<Step> mStepList;
 
     @BindView(R.id.tv_title_ingredient)
     TextView mTvIngredientContent;
@@ -111,9 +116,11 @@ public class ItemDetailFragment extends Fragment implements RecipeStepsAdapter.o
             // to load content from a content provider.
             item = (RecipeItem) bundle.getSerializable(ARG_ITEM_ID);
 
-            mSteps = item.getSteps();
+            mStepList = item.getSteps();
 
-            mIngredient = item.getIngredients();
+            mIngredientList = item.getIngredients();
+
+            saveIngredientInSharePrefs(mIngredientList);
 
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
@@ -142,9 +149,9 @@ public class ItemDetailFragment extends Fragment implements RecipeStepsAdapter.o
 
         mIngredientRecycleView.setLayoutManager(mIngredientLinearLayoutManager);
 
-        mStepsAdapter = new RecipeStepsAdapter(mSteps,item, getActivity());
+        mStepsAdapter = new RecipeStepsAdapter(mStepList,item, getActivity());
 
-        mIngredientAdapter = new RecipeIngredientAdapter(mIngredient,item);
+        mIngredientAdapter = new RecipeIngredientAdapter(mIngredientList,item);
 
         mStepsAdapter.setmFragmentListener(this);
 
@@ -154,6 +161,21 @@ public class ItemDetailFragment extends Fragment implements RecipeStepsAdapter.o
 
 
         return rootView;
+    }
+
+    private void saveIngredientInSharePrefs(List<Ingredient> ingredientList){
+
+        Gson gson = new Gson();
+
+        String jsonText = gson.toJson(ingredientList);
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(ARG_WIDGET_INGREDIENT, Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putString(ARG_WIDGET_INGREDIENT_EDITOR, jsonText);
+
+        editor.commit();
     }
 
     @Override

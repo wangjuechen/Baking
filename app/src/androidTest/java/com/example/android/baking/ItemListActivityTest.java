@@ -23,15 +23,15 @@ import static org.hamcrest.Matchers.allOf;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class ItemListActivityTest2 {
+public class ItemListActivityTest {
 
     @Rule
     public ActivityTestRule<ItemListActivity> mActivityTestRule = new ActivityTestRule<>(ItemListActivity.class);
 
     @Test
-    public void itemListActivityTest2() {
-        ViewInteraction recyclerView = onView(
-                allOf(withId(R.id.rv_receipt_list),isDisplayed()));
+    public void itemListActivityTest() {
+        ViewInteraction recyclerView = onView(allOf(
+                withId(R.id.rv_receipt_list),isDisplayed()));
         recyclerView.perform(actionOnItemAtPosition(1, click()));
 
         ViewInteraction recyclerView2 = onView(
