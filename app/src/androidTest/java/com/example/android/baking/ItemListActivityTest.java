@@ -1,31 +1,25 @@
 package com.example.android.baking;
 
 
+import android.content.Intent;
+import android.support.test.espresso.DataInteraction;
 import android.support.test.espresso.ViewInteraction;
-import android.support.test.espresso.action.ViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.v7.widget.RecyclerView;
+import android.support.v4.app.Fragment;
 import android.test.suitebuilder.annotation.LargeTest;
-import android.widget.TextView;
 
-import org.hamcrest.Matcher;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
-import static android.support.test.espresso.contrib.RecyclerViewActions.scrollTo;
 import static android.support.test.espresso.contrib.RecyclerViewActions.scrollToPosition;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withParent;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 
 @LargeTest
@@ -35,33 +29,42 @@ public class ItemListActivityTest {
     @Rule
     public ActivityTestRule<ItemListActivity> mActivityTestRule = new ActivityTestRule<>(ItemListActivity.class);
 
-    @Test
-    public void itemListActivityTest() {
-        ViewInteraction recyclerView = onView(allOf(
-                withId(R.id.rv_receipt_list),isDisplayed()));
+    private Fragment fragment;
+    private ItemListActivity activity;
 
-        recyclerView.perform(scrollToPosition(1));
-
-
+    @Before
+    public void setup() {
+        // Setup shared mock information or do your dependency injection
+        fragment = new ItemListFragment();
     }
 
-    public static Matcher<RecyclerView.ViewHolder> withHolderTimeView(final String text) {
-        return new BoundedMatcher<RecyclerView.ViewHolder, DateOptionViewHolder>(DateOptionViewHolder.class) {
+   /* @Test
+    public void itemListActivityTest() {
+        ViewInteraction recyclerViewRecipe = onView(allOf(
+                withId(R.id.rv_receipt_list), isDisplayed()));
 
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("No ViewHolder found with text: " + text);
-            }
+        recyclerViewRecipe.perform(scrollToPosition(1), click());
 
-            @Override
-            protected boolean matchesSafely(DateOptionViewHolder item) {
-                TextView timeViewText = (TextView) item.itemView.findViewById(R.id.tv_po_option_time);
-                if (timeViewText == null) {
-                    return false;
-                }
-                return timeViewText.getText().toString().contains(text);
-            }
-        };
+        ViewInteraction recyclerViewDetail = onView(allOf(
+                withId(R.id.rv_item_steps), isDisplayed()));
+
+        recyclerViewDetail.perform(scrollToPosition(1), click());
+
+    }*/
+
+    @Test public void fragmentTest() {
+        // Setup your test specific mocks here
+
+        activity = mActivityTestRule.launchActivity(new Intent());
+        activity.getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.receiptCardView_fragment_container, fragment)
+                .commit();
+
+        ViewInteraction recyclerViewRecipe = onView(allOf(
+                withId(R.id.rv_receipt_list), isDisplayed()));
+
+        recyclerViewRecipe.perform(scrollToPosition(1), click());
     }
 
 }

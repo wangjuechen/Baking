@@ -4,58 +4,43 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v4.widget.NestedScrollView
-        android:id="@+id/scrollview_ingredient_step"
+    <TextView
+        android:id="@+id/tv_title_ingredient"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="@dimen/text_margin"
+        android:text="@string/ingredient_item_detailPage"
+        android:textSize="@dimen/Title_CardView_fontSize" />
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_item_ingredient"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars="none">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/linearLayout_ingredient_step"
-            android:focusableInTouchMode="true"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/tv_title_ingredient"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_margin="@dimen/text_margin"
-                android:text="@string/ingredient_item_detailPage"
-                android:textSize="@dimen/Title_CardView_fontSize" />
+        tools:listitem="@layout/item_list_ingredient_content" />
 
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_item_ingredient"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:listitem="@layout/item_list_ingredient_content" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_line"
+        android:background="@color/secondary_text" />
 
+    <TextView
+        android:id="@+id/tv_title_steps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="@dimen/text_margin"
+        android:text="@string/steps_item_detailPage"
+        android:textSize="@dimen/Title_CardView_fontSize" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/divider_line"
-                android:background="@color/secondary_text" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_item_steps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:listitem="@layout/item_list_steps_content" />
 
-            <TextView
-                android:id="@+id/tv_title_steps"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_margin="@dimen/text_margin"
-                android:text="@string/steps_item_detailPage"
-                android:textSize="@dimen/Title_CardView_fontSize" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_item_steps"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:listitem="@layout/item_list_steps_content" />
-        </LinearLayout>
-
-    </android.support.v4.widget.NestedScrollView>
 
 </LinearLayout>
 

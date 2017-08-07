@@ -1,5 +1,7 @@
 package com.example.android.baking;
 
+import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -30,7 +32,7 @@ public class ItemListActivity extends AppCompatActivity {
 
         ItemListFragment itemListFragment = new ItemListFragment();
 
-        if (findViewById(R.id.receiptGridView_fragment_container) != null) {
+        if (isTabletLandscape(this)) {
             getSupportFragmentManager().beginTransaction().
                     add(R.id.receiptGridView_fragment_container, itemListFragment)
                     .commit();
@@ -41,6 +43,12 @@ public class ItemListActivity extends AppCompatActivity {
         }
 
 
+    }
+
+    private boolean isTabletLandscape(Context context) {
+        return ((context.getResources().getConfiguration().screenLayout
+                & Configuration.SCREENLAYOUT_SIZE_MASK)
+                >= Configuration.SCREENLAYOUT_SIZE_LARGE) && getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ;
     }
 
 
