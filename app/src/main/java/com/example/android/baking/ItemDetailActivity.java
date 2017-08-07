@@ -3,7 +3,6 @@ package com.example.android.baking;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.NavUtils;
@@ -44,18 +43,26 @@ public class ItemDetailActivity extends AppCompatActivity implements StepsDetail
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_detail);
 
-        if (isTablet(this)) {
+        if (isTabletLandscape(this)) {
             mTwoPane = true;
         }
-
 
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(ItemDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(ItemDetailFragment.ARG_ITEM_ID));
+
+            Intent intent = getIntent();
+
+            Bundle old = intent.getBundleExtra(ItemDetailFragment.ARG_BUNDLE);
+
+            mItem = old.getParcelable(ItemDetailFragment.ARG_ITEM_ID);
+
+            arguments.putParcelable(ItemDetailFragment.ARG_ITEM_ID,
+                    mItem);
+
             ItemDetailFragment fragment = new ItemDetailFragment();
+
             fragment.setArguments(arguments);
 
             getSupportFragmentManager().beginTransaction()
@@ -87,7 +94,11 @@ public class ItemDetailActivity extends AppCompatActivity implements StepsDetail
 
             StepsDetailFragment stepsDetailFragment = new StepsDetailFragment();
 
-            mItem = (RecipeItem) getIntent().getExtras().getSerializable(ItemDetailFragment.ARG_ITEM_ID);
+            Intent intent = getIntent();
+
+            Bundle old = intent.getBundleExtra(ItemDetailFragment.ARG_BUNDLE);
+
+            mItem = old.getParcelable(ItemDetailFragment.ARG_ITEM_ID);
 
             Step step = mItem.getSteps().get(0);
 
@@ -111,10 +122,10 @@ public class ItemDetailActivity extends AppCompatActivity implements StepsDetail
         }
     }
 
-    private boolean isTablet(Context context) {
-        return (context.getResources().getConfiguration().screenLayout
+    private boolean isTabletLandscape(Context context) {
+        return ((context.getResources().getConfiguration().screenLayout
                 & Configuration.SCREENLAYOUT_SIZE_MASK)
-                >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+                >= Configuration.SCREENLAYOUT_SIZE_LARGE) && getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ;
     }
 
     @Override
@@ -152,16 +163,16 @@ public class ItemDetailActivity extends AppCompatActivity implements StepsDetail
                 .replace(R.id.steps_fragment_container, stepFragment)
                 .commit();
     }
-    //TODO need modified, need RecipeItem as argument sent in here
 
-    public void onStepsVideoTwoPane(Step step, List<Step> stepList , RecipeItem items) {
+
+    public void onStepsVideoTwoPane(Step step, List<Step> stepList, RecipeItem items) {
 
         if (!mTwoPane) {
             Bundle bundle = new Bundle();
 
             Intent intent = new Intent(this, StepsDetailActivity.class);
 
-            bundle.putSerializable(ItemDetailFragment.ARG_ITEM_ID, items);
+            bundle.putParcelable(ItemDetailFragment.ARG_ITEM_ID, items);
 
             bundle.putString(StepsDetailFragment.STEP_DESCRIBE, step.getDescription());
 
@@ -169,7 +180,7 @@ public class ItemDetailActivity extends AppCompatActivity implements StepsDetail
 
             bundle.putString(StepsDetailFragment.STEP_URL, step.getVideoURL());
 
-            bundle.putSerializable(StepsDetailFragment.STEP_THUMBNAILURL, step.getThumbnailURL());
+            bundle.putString(StepsDetailFragment.STEP_THUMBNAILURL, step.getThumbnailURL());
 
             bundle.putInt(StepsDetailFragment.STEPS_SIZE, stepList.size());
 

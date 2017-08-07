@@ -37,7 +37,7 @@ public class StepsDetailActivity extends AppCompatActivity implements StepsDetai
 
             Bundle bundle = getIntent().getExtras();
 
-            mRecipeItem = (RecipeItem) bundle.getSerializable(ItemDetailFragment.ARG_ITEM_ID);
+            mRecipeItem = bundle.getParcelable(ItemDetailFragment.ARG_ITEM_ID);
             mStepList = bundle.getParcelableArrayList(StepsDetailFragment.STEPS);
 
             mVideoUrl = bundle.getString(STEP_URL);
@@ -70,11 +70,11 @@ public class StepsDetailActivity extends AppCompatActivity implements StepsDetai
 
             Bundle bundle = new Bundle();
             //TODO something wrong, item value is null, cant pass to here
-            RecipeItem item = (RecipeItem) savedInstanceState.getSerializable(ItemDetailFragment.ARG_ITEM_ID);
+            RecipeItem item = savedInstanceState.getParcelable(ItemDetailFragment.ARG_ITEM_ID);
             List<Step> step = savedInstanceState.getParcelableArrayList(STEP_ID);
             int id = savedInstanceState.getInt("ID");
 
-            bundle.putSerializable(ItemDetailFragment.ARG_ITEM_ID, item);
+            bundle.putParcelable(ItemDetailFragment.ARG_ITEM_ID, item);
             bundle.putParcelableArrayList(STEP_ID, (ArrayList<? extends Parcelable>) step);
             bundle.putInt("ID",id);
 

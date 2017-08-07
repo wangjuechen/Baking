@@ -46,6 +46,8 @@ public class ItemDetailFragment extends Fragment implements RecipeStepsAdapter.o
 
     public static final String ARG_WIDGET_INGREDIENT = "ingredient_pref";
 
+    public static final String ARG_BUNDLE = "list_bundle";
+
     private RecyclerView mStepsRecycleView;
 
     private RecyclerView mIngredientRecycleView;
@@ -107,14 +109,16 @@ public class ItemDetailFragment extends Fragment implements RecipeStepsAdapter.o
                              Bundle savedInstanceState) {
         RecipeItem item = null;
 
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
+        if (getArguments().containsKey(ItemDetailFragment.ARG_ITEM_ID)) {
 
-            Bundle bundle = getActivity().getIntent().getExtras();
+            Bundle bundle = getArguments();
 
+            if(bundle!= null){
+                item = bundle.getParcelable(ItemDetailFragment.ARG_ITEM_ID);
+            }
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
-            item = (RecipeItem) bundle.getSerializable(ARG_ITEM_ID);
 
             mStepList = item.getSteps();
 
@@ -185,7 +189,7 @@ public class ItemDetailFragment extends Fragment implements RecipeStepsAdapter.o
 
             Intent intent = new Intent(getContext(), StepsDetailActivity.class);
 
-            bundle.putSerializable(ItemDetailFragment.ARG_ITEM_ID, item);
+            bundle.putParcelable(ItemDetailFragment.ARG_ITEM_ID, item);
 
             bundle.putString(StepsDetailFragment.STEP_DESCRIBE, step.getDescription());
 

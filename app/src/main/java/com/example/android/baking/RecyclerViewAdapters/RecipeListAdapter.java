@@ -2,6 +2,7 @@ package com.example.android.baking.RecyclerViewAdapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,11 +19,11 @@ import java.util.List;
 
 public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.ViewHolder> {
 
-    private List<RecipeItem> mRecipes;
+    private List<RecipeItem> mRecipeList;
 
 
     public RecipeListAdapter(List<RecipeItem> items) {
-        mRecipes = items;
+        mRecipeList = items;
     }
 
 
@@ -35,12 +36,10 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mRecipes.get(position);
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
+        holder.mItem = mRecipeList.get(position);
 
-        holder.mTitleView.setText(mRecipes.get(position).getName());
-
-
+        holder.mTitleView.setText(mRecipeList.get(position).getName());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,9 +47,13 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
 
                 Context context = v.getContext();
 
+                Bundle bundle  = new Bundle();
+
+                bundle.putParcelable(ItemDetailFragment.ARG_ITEM_ID, mRecipeList.get(position));
+
                 Intent intent = new Intent(context, ItemDetailActivity.class);
 
-                intent.putExtra(ItemDetailFragment.ARG_ITEM_ID, holder.mItem);
+                intent.putExtra(ItemDetailFragment.ARG_BUNDLE,bundle);
 
                 context.startActivity(intent);
 
@@ -60,7 +63,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Vi
 
     @Override
     public int getItemCount() {
-        return  mRecipes == null? 0: mRecipes.size();
+        return  mRecipeList == null? 0: mRecipeList.size();
     }
 
 

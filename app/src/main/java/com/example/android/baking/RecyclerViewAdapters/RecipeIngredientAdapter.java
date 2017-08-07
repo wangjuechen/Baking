@@ -65,7 +65,6 @@ public class RecipeIngredientAdapter extends RecyclerView.Adapter<RecipeIngredie
         public ingredientViewHolder(View itemView) {
             super(itemView);
             mContext = itemView.getContext();
-
             mIngredientView = itemView;
 
             mIngredientQuantity = (TextView) itemView.findViewById(R.id.tv_ingredient_quantity);

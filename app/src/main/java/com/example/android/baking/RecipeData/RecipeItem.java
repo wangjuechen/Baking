@@ -1,11 +1,13 @@
 package com.example.android.baking.RecipeData;
 
 import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -14,7 +16,7 @@ import java.util.List;
  * Android template wizards.
  * <p>
  */
-public class RecipeItem implements Serializable{
+public class RecipeItem implements Parcelable{
 
     @SerializedName("id")
     @Expose
@@ -26,11 +28,11 @@ public class RecipeItem implements Serializable{
 
     @SerializedName("ingredients")
     @Expose
-    private List<Ingredient> ingredients = null;
+    private List<Ingredient> ingredients;
 
     @SerializedName("steps")
     @Expose
-    private List<Step> steps = null;
+    private List<Step> steps;
 
     @SerializedName("servings")
     @Expose
@@ -40,10 +42,30 @@ public class RecipeItem implements Serializable{
     @Expose
     private String image;
 
-    protected RecipeItem(Parcel in) {
+    public RecipeItem(Parcel in) {
+        id = in.readInt();
         name = in.readString();
+
+        ingredients = new ArrayList<>();
+        in.readTypedList(ingredients, Ingredient.CREATOR);
+
+        steps = new ArrayList<>();
+        in.readTypedList(steps, Step.CREATOR);
+
         image = in.readString();
     }
+
+    public static final Creator<RecipeItem> CREATOR = new Creator<RecipeItem>() {
+        @Override
+        public RecipeItem createFromParcel(Parcel in) {
+            return new RecipeItem(in);
+        }
+
+        @Override
+        public RecipeItem[] newArray(int size) {
+            return new RecipeItem[size];
+        }
+    };
 
     public Integer getId() {
         return id;
@@ -92,4 +114,19 @@ public class RecipeItem implements Serializable{
     public void setImage(String image) {
         this.image = image;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(name);
+        dest.writeTypedList(ingredients);
+        dest.writeTypedList(steps);
+        dest.writeString(image);
+    }
+
 }

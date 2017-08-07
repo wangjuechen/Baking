@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class Step implements Serializable , Parcelable{
+public class Step implements Parcelable{
 
     @SerializedName("id")
     @Expose
@@ -32,6 +32,7 @@ public class Step implements Serializable , Parcelable{
     private String thumbnailURL;
 
     protected Step(Parcel in) {
+        id = in.readInt();
         shortDescription = in.readString();
         description = in.readString();
         videoURL = in.readString();
@@ -97,6 +98,7 @@ public class Step implements Serializable , Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
         dest.writeString(shortDescription);
         dest.writeString(description);
         dest.writeString(videoURL);

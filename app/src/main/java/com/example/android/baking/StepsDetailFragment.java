@@ -123,7 +123,7 @@ public class StepsDetailFragment extends Fragment {
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(STEP_ID)) {
 
-                mRecipeItem = (RecipeItem) savedInstanceState.getSerializable(ItemDetailFragment.ARG_ITEM_ID);
+                mRecipeItem = savedInstanceState.getParcelable(ItemDetailFragment.ARG_ITEM_ID);
 
                 mStepList = savedInstanceState.getParcelableArrayList(STEP_ID);
 
@@ -257,7 +257,7 @@ public class StepsDetailFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(ItemDetailFragment.ARG_ITEM_ID, mRecipeItem);
+        outState.putParcelable(ItemDetailFragment.ARG_ITEM_ID, mRecipeItem);
         outState.putParcelableArrayList(STEP_ID, (ArrayList<? extends Parcelable>) mStepList);
         outState.putInt("ID", mStepId);
 

@@ -3,6 +3,7 @@ package com.example.android.baking.RecyclerViewAdapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +46,7 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
 
         holder.mThumbnailUrl = mStepList.get(position).getThumbnailURL();
 
-        if (holder.mThumbnailUrl.length() > 0 && holder.mThumbnailUrl != null) {
+        if (!TextUtils.isEmpty(holder.mThumbnailUrl)) {
             Picasso.with(mContext).load(holder.mThumbnailUrl).into(holder.mImageView);
         }
 
