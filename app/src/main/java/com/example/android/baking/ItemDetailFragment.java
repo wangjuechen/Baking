@@ -1,6 +1,8 @@
 package com.example.android.baking;
 
 import android.app.Activity;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import com.example.android.baking.RecipeData.Ingredient;
@@ -21,6 +24,8 @@ import com.example.android.baking.RecipeData.RecipeItem;
 import com.example.android.baking.RecipeData.Step;
 import com.example.android.baking.RecyclerViewAdapters.RecipeIngredientAdapter;
 import com.example.android.baking.RecyclerViewAdapters.RecipeStepsAdapter;
+import com.example.android.baking.WidgetUtils.BakingWidgetProvider;
+import com.example.android.baking.WidgetUtils.WidgetService;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -125,6 +130,14 @@ public class ItemDetailFragment extends Fragment implements RecipeStepsAdapter.o
             mIngredientList = item.getIngredients();
 
             saveIngredientInSharePrefs(mIngredientList);
+
+            Context context = getContext();
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+            Intent intent = new Intent(context, WidgetService.class);
+            RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.baking_widget);
+            ComponentName thisWidget = new ComponentName(context, BakingWidgetProvider.class);
+            remoteViews.setRemoteAdapter( R.id.widget_listView, intent);
+            appWidgetManager.updateAppWidget(thisWidget, remoteViews);
 
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
