@@ -77,6 +77,16 @@ public class ItemListFragment extends Fragment implements ConnectivityReceiver.C
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        if (checkConnectivity()) {
+
+            mRequestQueue = Volley.newRequestQueue(getActivity());
+            GsonBuilder gsonbuilder = new GsonBuilder();
+            gsonbuilder.setDateFormat("M/d/yy hh:mm a");
+            gson = gsonbuilder.create();
+            fetchPosts();
+        }
+
+        mAdapter = new RecipeListAdapter(mRecipeItems);
         super.onCreate(savedInstanceState);
     }
 
@@ -94,6 +104,7 @@ public class ItemListFragment extends Fragment implements ConnectivityReceiver.C
         mRecycleView = (RecyclerView) rootView.findViewById(R.id.rv_receipt_list);
         mRecycleView.setHasFixedSize(true);
 
+
         if (mTabletDisplay) {
             int numOfCol = 3;
             mRecycleView.setLayoutManager(new GridLayoutManager(getActivity(), numOfCol));
@@ -101,15 +112,6 @@ public class ItemListFragment extends Fragment implements ConnectivityReceiver.C
         } else {
             mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             mRecycleView.setLayoutManager(mLayoutManager);
-        }
-
-        if (checkConnectivity()) {
-
-            mRequestQueue = Volley.newRequestQueue(getActivity());
-            GsonBuilder gsonbuilder = new GsonBuilder();
-            gsonbuilder.setDateFormat("M/d/yy hh:mm a");
-            gson = gsonbuilder.create();
-            fetchPosts();
         }
 
         return rootView;
