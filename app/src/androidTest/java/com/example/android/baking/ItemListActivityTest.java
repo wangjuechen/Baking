@@ -65,6 +65,10 @@ public class ItemListActivityTest {
                 withId(R.id.rv_receipt_list), isDisplayed()));
 
         recyclerViewRecipe.perform(scrollToPosition(1), click());
+
+        ViewInteraction recyclerViewDetails = onView(allOf(withId(R.id.rv_item_steps), isDisplayed()));
+
+        recyclerViewDetails.perform(scrollToPosition(1),click());
     }
 
 }
