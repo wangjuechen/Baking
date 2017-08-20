@@ -15,7 +15,8 @@
         android:theme="@style/AppTheme.NoActionBar">
         <activity
             android:name=".ItemListActivity"
-            android:label="@string/title_item_list">
+            android:label="@string/title_item_list"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
