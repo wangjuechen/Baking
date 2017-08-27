@@ -2,7 +2,7 @@
     <string name="app_name">Baking</string>
 
     <string name="action_licenses">Open Source Licenses</string>
-    <string name="title_item_list">Items</string>
+    <string name="title_item_list">Recipes</string>
     <string name="title_item_detail">Item Detail</string>
 
     <string name="JSON_parseError_Text">There is error in JSON parsing</string>

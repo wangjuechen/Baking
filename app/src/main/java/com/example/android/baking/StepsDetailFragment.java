@@ -195,7 +195,7 @@ public class StepsDetailFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (Util.SDK_INT > 23) {
+        if (Util.SDK_INT <= 23) {
             initializePlayer();
         }
 
@@ -208,8 +208,6 @@ public class StepsDetailFragment extends Fragment {
 
         mPlayerView.setPlayer(mExoPlayer);
 
-        mExoPlayer.setPlayWhenReady(mPlayWhenReady);
-
         mExoPlayer.seekTo(currentWindow, playbackPosition);
 
         Uri uri = Uri.parse(mVideoUrl);
@@ -217,7 +215,8 @@ public class StepsDetailFragment extends Fragment {
         MediaSource mediaSource = buildMediaSource(uri);
 
         mExoPlayer.prepare(mediaSource, true, false);
-        //mExoPlayer.setPlayWhenReady(true);
+
+        mExoPlayer.setPlayWhenReady(true);
     }
 
     @Override

@@ -54,7 +54,6 @@ public class StepsDetailActivity extends AppCompatActivity implements StepsDetai
             stepsDetailFragment.setStepsSize(mStepsSize);
             stepsDetailFragment.setThumbnailUrl(mThumbnailUrl);
 
-
             Bundle arguments = new Bundle();
             arguments.putString(STEP_ID,
                     getIntent().getStringExtra(STEP_ID));
@@ -86,21 +85,6 @@ public class StepsDetailActivity extends AppCompatActivity implements StepsDetai
         }
     }
 
-    /*@Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        SimpleExoPlayerView player = (SimpleExoPlayerView) findViewById(R.id.video_player_view);
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        int width = metrics.widthPixels;
-        int height = metrics.heightPixels;
-
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
-
-        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
-            player.setLayoutParams(layoutParams);
-        }
-    }*/
 
     public void onFragmentInteraction(int stepID, List<Step> stepList) {
 
